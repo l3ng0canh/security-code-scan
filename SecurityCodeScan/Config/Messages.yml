@@ -187,6 +187,14 @@ SCS0029:
   cwe: 79
   cwe_url: https://cwe.mitre.org/data/definitions/79.html
 
+
+SCS0029_1:
+  title: "Potential Cross-Site Scripting (XSS) vulnerability was found in {0}({1}): {2}."
+  title_assignment: Potential Cross-Site Scripting (XSS) vulnerability.
+  description: The untrusted value used to create a HTML should be validated or properly encoded.
+  cwe: 79
+  cwe_url: https://cwe.mitre.org/data/definitions/79.html
+
 SCS0030:
   title: "Request validation is enabled only for pages, not for all HTTP requests in {0}({1}): {2}."
   description: The RequestValidationMode property specifies which ASP.NET approach to validation will be used.

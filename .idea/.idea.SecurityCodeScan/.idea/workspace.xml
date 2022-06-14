@@ -7,8 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3473d60e-12e3-4593-9346-11546d0dfecb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorXSS.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorXSS.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorXSS.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Config/Messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Config/Messages.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -84,7 +85,9 @@
       <option name="presentableId" value="Default" />
       <updated>1655048206749</updated>
       <workItem from="1655048217367" duration="1119000" />
-      <workItem from="1655053897454" duration="2200000" />
+      <workItem from="1655053897454" duration="3742000" />
+      <workItem from="1655224287026" duration="205000" />
+      <workItem from="1655224549220" duration="891000" />
     </task>
     <servers />
   </component>

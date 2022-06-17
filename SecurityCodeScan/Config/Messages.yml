@@ -225,3 +225,10 @@ SCS0034:
   description: This property must be set to increase password requirements strength.
   cwe: 521
   cwe_url: https://cwe.mitre.org/data/definitions/521.html
+  
+SCS0035:
+  title: "Potential Server-side request forgery (SSRF) vulnerability was found where '{0}' in '{1}' may be tainted by user-controlled data from '{2}' in method '{3}'."
+  title_assignment: Potential Server-side request forgery (SSRF) vulnerability.
+  description: The untrusted value passed to the server to make request should be validated.
+  cwe: 918
+  cwe_url: https://cwe.mitre.org/data/definitions/918.html

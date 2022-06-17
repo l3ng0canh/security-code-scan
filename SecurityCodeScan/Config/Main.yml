@@ -1532,6 +1532,14 @@ Sinks:
 #      Arguments:
 #        - model
 
+
+  - Type: System.Net.WebRequest
+    TaintTypes:
+      - SCS0035
+    Methods:
+      - Name: Create
+        Arguments:
+          - requestUriString
   - Type: System.Web.Mvc.HtmlHelper
     TaintTypes:
       - SCS0029

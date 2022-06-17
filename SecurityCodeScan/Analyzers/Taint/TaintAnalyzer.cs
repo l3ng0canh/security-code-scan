@@ -35,6 +35,7 @@ namespace SecurityCodeScan.Analyzers.Taint
         SCS0028,
         SCS0029,
         SCS0031,
+        SCS0035,
     }
 
     [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
@@ -107,6 +108,15 @@ namespace SecurityCodeScan.Analyzers.Taint
         protected override DiagnosticDescriptor TaintedDataEnteringSinkDescriptor { get { return Rule; } }
     }
 
+    [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
+    public class SsrfTaintAnalyzer : TaintAnalyzer
+    {
+        internal static readonly DiagnosticDescriptor Rule = LocaleUtil.GetDescriptor("SCS0035");
+
+        protected override SinkKind SinkKind { get { return (SinkKind)(int)TaintType.SCS0035; } }
+
+        protected override DiagnosticDescriptor TaintedDataEnteringSinkDescriptor { get { return Rule; } }
+    }
     [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
     public class LdapPathTaintAnalyzer : TaintAnalyzer
     {

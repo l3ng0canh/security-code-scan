@@ -63,7 +63,7 @@ namespace SecurityCodeScan.Analyzers
             }
         }
 
-        private static readonly Regex Regex = new Regex(@"WriteLiteral\\((.|\n|\r|\t)+?\\);",
+        private static readonly Regex Regex = new Regex("WriteLiteral\\((.|\n|\r|\t)+?\\);",
                                                         RegexOptions.CultureInvariant | RegexOptions.IgnoreCase,
                                                         TimeSpan.FromSeconds(60));
 

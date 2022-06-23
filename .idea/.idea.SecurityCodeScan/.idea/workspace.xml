@@ -7,11 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3473d60e-12e3-4593-9346-11546d0dfecb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorWriteLiteralXSS.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorXSS.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorHtmlRawXSS.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Config/Messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Config/Messages.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorWriteLiteralXSS.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorWriteLiteralXSS.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +88,7 @@
       <workItem from="1655224287026" duration="205000" />
       <workItem from="1655224549220" duration="2082000" />
       <workItem from="1655458084089" duration="1019000" />
-      <workItem from="1655959017836" duration="1246000" />
+      <workItem from="1655959017836" duration="2665000" />
     </task>
     <servers />
   </component>

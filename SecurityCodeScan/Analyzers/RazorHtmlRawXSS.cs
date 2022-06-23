@@ -13,12 +13,12 @@ using SecurityCodeScan.Analyzers.Utils;
 namespace SecurityCodeScan.Analyzers
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp, LanguageNames.VisualBasic)]
-    public class RazorXss: DiagnosticAnalyzer, IExternalFileAnalyzer
+    public class RazorHtmlRawXss: DiagnosticAnalyzer, IExternalFileAnalyzer
     {
         List<string>                                files    = new List<string>();
-        public static readonly DiagnosticDescriptor razorXSS = LocaleUtil.GetDescriptor("SCS0029_1");
+        public static readonly DiagnosticDescriptor razorHtmlRawXSS = LocaleUtil.GetDescriptor("SCS0029_1");
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(razorXSS);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(razorHtmlRawXSS);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -73,7 +73,7 @@ namespace SecurityCodeScan.Analyzers
             var content = text.ToString();
             foreach (Match match in Regex.Matches(content))
             {
-                context.ReportDiagnostic(ExternalDiagnostic.Create(razorXSS,
+                context.ReportDiagnostic(ExternalDiagnostic.Create(razorHtmlRawXSS,
                                                                    file.Path,
                                                                    text.Lines.GetLinePosition(match.Index).Line + 1,
                                                                    content.Substring(match.Index, match.Length)));

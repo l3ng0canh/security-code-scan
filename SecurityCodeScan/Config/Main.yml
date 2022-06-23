@@ -1540,6 +1540,15 @@ Sinks:
       - Name: Create
         Arguments:
           - requestUriString
+            
+  - Type: System.Net.Http.HttpClient
+    TaintTypes:
+      - SCS0035
+    Methods:
+      - Name: GetAsync
+        Arguments:
+          - requestUri
+  
   - Type: System.Web.Mvc.HtmlHelper
     TaintTypes:
       - SCS0029

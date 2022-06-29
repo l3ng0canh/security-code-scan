@@ -8,7 +8,9 @@
   <component name="ChangeListManager">
     <list default="true" id="3473d60e-12e3-4593-9346-11546d0dfecb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorWriteLiteralXSS.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/RazorWriteLiteralXSS.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/Taint/TaintAnalyzer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/Taint/TaintAnalyzer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Config/Messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Config/Messages.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,9 +55,9 @@
       </method>
     </configuration>
     <configuration name="security-scan" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/SecurityCodeScan.Tool/.NET 4.x/bin/Debug/net48/security-scan.exe" />
-      <option name="PROGRAM_PARAMETERS" value="F:\Learn\DoAnTotNghiep\WebApplicationVul\WebApplicationVul.sln" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SecurityCodeScan.Tool/.NET 4.x/bin/Debug/net48" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/SecurityCodeScan.Tool/.NET 4.x/bin/Release/net48/security-scan.exe" />
+      <option name="PROGRAM_PARAMETERS" value="F:\Learn\DoAnTotNghiep\VulApp\WebApplicationVulnerable\WebApplicationVulnerable.sln" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SecurityCodeScan.Tool/.NET 4.x/bin/Release/net48" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -88,7 +90,12 @@
       <workItem from="1655224287026" duration="205000" />
       <workItem from="1655224549220" duration="2082000" />
       <workItem from="1655458084089" duration="1019000" />
-      <workItem from="1655959017836" duration="2665000" />
+      <workItem from="1655959017836" duration="4526000" />
+      <workItem from="1655969854270" duration="1186000" />
+      <workItem from="1656345400474" duration="3197000" />
+      <workItem from="1656386231293" duration="1848000" />
+      <workItem from="1656433657313" duration="1306000" />
+      <workItem from="1656476339593" duration="6169000" />
     </task>
     <servers />
   </component>

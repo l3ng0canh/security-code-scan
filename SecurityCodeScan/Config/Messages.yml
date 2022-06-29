@@ -239,3 +239,10 @@ SCS0035:
   description: The untrusted value passed to the server to make request should be validated.
   cwe: 918
   cwe_url: https://cwe.mitre.org/data/definitions/918.html
+  
+SCS0036:
+  title: "Potential Server-Side Template Injection (SSTI) vulnerability was found where '{0}' in '{1}' may be tainted by user-controlled data from '{2}' in method '{3}'."
+  title_assignment: Potential Server-Side Template Injection (SSTI) vulnerability.
+  description: Improper Neutralization of Special Elements Used in a Template Engine.
+  cwe: 1336
+  cwe_url: https://cwe.mitre.org/data/definitions/1336.html

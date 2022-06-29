@@ -1533,6 +1533,16 @@ Sinks:
 #        - model
 
 
+  - Type: RazorEngine.Razor
+    TaintTypes:
+      - SCS0036
+    Methods:
+      - Name: Parse
+        Arguments:
+          - razorTemplate
+            
+            
+            
   - Type: System.Net.WebRequest
     TaintTypes:
       - SCS0035

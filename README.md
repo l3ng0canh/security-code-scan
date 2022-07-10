@@ -1,10 +1,6 @@
 [![Security Code Scan](website/images/logo.png)](https://security-code-scan.github.io)  
 *Vulnerability Patterns Detector for C# and VB.NET* - [Website](https://security-code-scan.github.io)  
 
-[![Build](https://github.com/security-code-scan/security-code-scan/actions/workflows/ci.yml/badge.svg)](https://github.com/security-code-scan/security-code-scan/actions/workflows/ci.yml)
-
-### Downloading
-Official releases are available as [nuget package](https://www.nuget.org/packages/SecurityCodeScan.VS2019/), [Visual Studio extension](https://marketplace.visualstudio.com/items?itemName=JaroslavLobacevski.SecurityCodeScanVS2019) and [stand-alone runner](https://www.nuget.org/packages/security-scan/).  
 
 ### Building
 ```
@@ -16,6 +12,15 @@ Open `SecurityCodeScan.sln` in Visual Studio or build from command line:
 nuget restore SecurityCodeScan.sln
 msbuild SecurityCodeScan.sln
 ```
+### Usage
+
+```
+git clone https://github.com/l3ng0canh/security-code-scan
+cd security-code-scan/server
+pip install -r requirements.txt
+python app.py
+```
+Server will run at [http://localhost:5000](http://localhost:5000)
 
 ### Contributing
 * All documentation from the [official site](https://security-code-scan.github.io) is open-source and located in the [website](https://github.com/security-code-scan/security-code-scan/tree/vs2019/website) folder. Feel free to modify the markdown files and contribute to it.

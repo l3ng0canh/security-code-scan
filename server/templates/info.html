@@ -1,0 +1,1971 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <title>Security Code Scan</title>
+    <link rel="icon" type="image/x-icon" href={{ url_for('static', filename="favicon.ico" ) }}>
+
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+
+    <link rel="stylesheet" href={{ url_for('static', filename="components/gridism/gridism.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="components/primer/markdown.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="components/primer/octicons.css" ) }}>
+    <link href={{ url_for('static', filename="stylesheets/main.css" ) }} rel="stylesheet">
+    <link href={{ url_for('static', filename="stylesheets/vs.css" ) }} rel="stylesheet">
+    <link href={{ url_for('static', filename="stylesheets/jquery.tocify.css" ) }} rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href={{ url_for('static', filename="assets/img/logo.ico" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/bootstrap/css/bootstrap.min.css" ) }}>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
+
+    <script src={{ url_for('static', filename="javascripts/jquery.js" ) }} type="text/javascript"></script>
+    <script src={{ url_for('static', filename="javascripts/jquery-ui.min.js" ) }} type="text/javascript"></script>
+    <script src={{ url_for('static', filename="javascripts/snap.svg-min.js" ) }} type="text/javascript"></script>
+    <script src={{ url_for('static', filename="javascripts/application.js" ) }} type="text/javascript"></script>
+    <script src={{ url_for('static', filename="javascripts/jquery.tocify.js" ) }} type="text/javascript"></script>
+    <script src={{ url_for('static', filename="javascripts/highlight.pack.js" ) }} type="text/javascript"></script>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/fonts/font-awesome.min.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/css/Contact-Form-Clean.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/css/Features-Boxed.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/css/Footer-Clean.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/css/styles.css" ) }}>
+
+    <script type="text/javascript">
+        $(function () {
+            $(".markdown-body h3").each(function () {
+                let flag = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="18" height="18"><path fill="#005BBB" d="M32 5H4C1.791 5 0 6.791 0 9v9h36V9c0-2.209-1.791-4-4-4z"/><path fill="#FFD500" d="M36 27c0 2.209-1.791 4-4 4H4c-2.209 0-4-1.791-4-4v-9h36v9z"/></svg>';
+                if ($(this).attr("id").startsWith("scs")) {
+                    $(this).prepend(flag + '&nbsp;');
+                    $(this).append('&nbsp;' + flag);
+                }
+            });
+
+            //Calls the tocify method on your HTML div.
+            $("#toc").tocify({
+                theme: "none",
+                context: ".markdown-body",
+                hashGenerator: tocifyHasher
+            });
+
+            $(".tocify-item").on('click', function () {
+                trackLink('anchor', $(this)[0].attributes["data-unique"].nodeValue);
+            });
+            $("a").each(function () {
+                var href = $(this).attr("href");
+                if (href != null) {
+                    $(this).on('click', function () {
+                        trackLink('outbound', $(this).attr("href"));
+                    });
+                }
+            });
+            var trackLink = function (category, url) {
+                gtag('event', 'click', {
+                    'event_category': category,
+                    'event_label': url
+                });
+            }
+        });
+        hljs.initHighlightingOnLoad();
+    </script>
+
+</head>
+
+<body>
+    <header style="font-family: ABeeZee, sans-serif;">
+        <div class="container">
+            <nav class="navbar navbar-light navbar-expand-md">
+                <div class="container-fluid"><button data-bs-toggle="collapse" class="navbar-toggler"
+                        data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span
+                            class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navcol-1"><img src={{ url_for('static',
+                            filename="assets/img/logo.png" ) }} class="logo" style="max-width: 195px;">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link active" href="/"
+                                    style="font-family: ABeeZee, sans-serif;">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/info"
+                                    style="font-family: ABeeZee, sans-serif;">Tool
+                                    Information</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <article class="full">
+
+        <div class="wrap">
+
+            <div class="toc-wrapper">
+                <div id="toc"></div>
+            </div>
+
+            <div class="markdown-body content-body ">
+
+                <h1 id="quick-facts">Quick Facts</h1>
+
+                <p class="text-danger border-bottom "><span class="octicon octicon-alert"></span> Note. Below is
+                    information about Security Code Scan tool after improvement. All information about the original tool
+                    can be viewed <a href="https://security-code-scan.github.io/">here</a></p>
+                <p><span class="octicon octicon-mark-github"></span> <a
+                        href="https://github.com/l3ng0canh/security-code-scan">Open Source</a></p>
+
+                <p><span class="octicon octicon-bug"></span> Detects various <a href="#rules">security vulnerability
+                        patterns</a>: SQL Injection, Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), XML
+                    eXternal Entity Injection (XXE), etc.</p>
+
+                <p><span class="octicon octicon-git-branch"></span> Inter-procedural taint analysis for input data.</p>
+
+
+                <p><span class="octicon octicon-code"></span> Analyzes .NET and <a
+                        href="https://en.wikipedia.org/wiki/.NET_Framework#.NET_Core">.NET Core</a> projects in a
+                    background (IntelliSense) or during a build.</p>
+
+
+                <h1 id="installation">Installation</h1>
+                <p>This version of SCS can be installed </a> from <a
+                        href="https://github.com/l3ng0canh/security-code-scan">GitHub</a>:</p>
+
+
+                <ul>Building
+                    <li><code>git clone https://github.com/security-code-scan/security-code-scan.git</code></li>
+                    <li><code>cd security-code-scan</code></li>
+                    Open `SecurityCodeScan.sln` in Visual Studio or build from command line:
+                    <li><code>nuget restore SecurityCodeScan.sln</code></li>
+                    <li><code>msbuild SecurityCodeScan.sln</code></li>
+                </ul>
+
+                <ul> Usage
+                    <li>
+                        <code>git clone https://github.com/l3ng0canh/security-code-scan</code>
+
+
+                    </li>
+                    <li>
+                        <code>cd security-code-scan/server</code>
+                    </li>
+                    <li>
+                        <code>pip install -r requirements.txt</code>
+                    </li>
+                    <li>
+                        <code>python app.py</code>
+                    </li>
+                </ul>
+
+                Server will run at <a href="http://localhost:5000">http://localhost:5000</a>
+
+                <h1 id="configuration">Configuration</h1>
+
+
+
+
+                <h2 id="external-configuration-files">External Configuration Files</h2>
+                <p>You can customize settings from <a
+                        href="https://github.com/l3ng0canh/security-code-scan/blob/vs2019/SecurityCodeScan/Config/Main.yml">built-in
+                        configuration</a>
+                </p>
+
+                <h2 id="custom-taint-source-sinks-sanitizers-and-validators">Custom taint source, sinks, sanitizers and
+                    validators</h2>
+
+                <p>An example of custom sink function (method that shouldn’t be
+                    called with untrusted data without first being sanitized):</p>
+
+                <pre><code class="language-yaml">Sinks:
+  - Type: System.Messaging.BinaryMessageFormatter
+    TaintTypes:
+      - SCS0028
+    Methods:
+    - Name: Read
+      Arguments:
+        - message
+</code></pre>
+
+                <p>See the <a
+                        href="https://github.com/l3ng0canh/security-code-scan/blob/vs2019/SecurityCodeScan/Config/Main.yml">configuration
+                        file</a> for comments and examples of usage.</p>
+
+
+                <h1 id="rules">Rules</h1>
+                <h2 id="injection">Injection</h2>
+                <h4 id="references">References</h4>
+                <p><a href="https://owasp.org/www-project-top-ten/2017/A1_2017-Injection">OWASP: Top 10
+                        2017-A1-Injection</a></p>
+                <div id="SCS0001"></div>
+
+                <h3 id="scs0001---command-injection">SCS0001 - Command Injection</h3>
+                <p>The dynamic value passed to the command execution should be validated.</p>
+                <h4 id="risk">Risk</h4>
+                <p>If a malicious user controls either the FileName or Arguments, he might be able to execute unwanted
+                    commands or add unwanted argument. This behavior would not be possible if input parameter are
+                    validate against a white-list of characters.</p>
+                <h4 id="vulnerable-code">Vulnerable Code</h4>
+                <pre><code class="language-cs">var p = new Process();
+p.StartInfo.FileName = "exportLegacy.exe";
+p.StartInfo.Arguments = " -user " + input + " -role user";
+p.Start();
+</code></pre>
+                <h4 id="solution">Solution</h4>
+                <pre><code class="language-cs">Regex rgx = new Regex(@"^[a-zA-Z0-9]+$");
+if(rgx.IsMatch(input))
+{
+    var p = new Process();
+    p.StartInfo.FileName = "exportLegacy.exe";
+    p.StartInfo.Arguments = " -user " + input + " -role user";
+    p.Start();
+}
+</code></pre>
+                <h4 id="references-1">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/78.html">CWE-78: Improper Neutralization of Special
+                        Elements used in an OS Command (‘OS Command Injection’)</a><br />
+                    <a href="https://owasp.org/www-community/attacks/Command_Injection">OWASP: Command
+                        Injection</a><br />
+                    <a href="https://owasp.org/www-project-top-ten/2017/A1_2017-Injection">OWASP: Top 10
+                        2017-A1-Injection</a>
+                </p>
+                <div id="SCS0002"></div>
+
+                <h3 id="scs0002---sql-injection">SCS0002 - SQL Injection</h3>
+                <p>SQL injection flaws are introduced when software developers create dynamic database queries that
+                    include user supplied input.</p>
+                <h4 id="risk-1">Risk</h4>
+                <p>Malicious user might get direct read and/or write access to the database. If the database is poorly
+                    configured the attacker might even get Remote Code Execution (RCE) on the machine running the
+                    database.</p>
+                <h4 id="vulnerable-code-1">Vulnerable Code</h4>
+                <pre><code class="language-cs">var cmd = "SELECT * FROM Users WHERE username = '" + input + "' and role='user'";
+ctx.Database.ExecuteSqlCommand(
+    cmd);
+</code></pre>
+                <h4 id="solution-1">Solution</h4>
+
+                <p>Use parametrized queries to mitigate SQL injection.</p>
+
+                <pre><code class="language-cs">var cmd = "SELECT * FROM Users WHERE username = @username and role='user'";
+ctx.Database.ExecuteSqlCommand(
+    cmd,
+    new SqlParameter("@username", input));
+</code></pre>
+                <h4 id="references-2">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/89.html">CWE-89: Improper Neutralization of Special
+                        Elements used in an SQL Command (‘SQL Injection’)</a><br />
+                    <a href="http://projects.webappsec.org/w/page/13246963/SQL%20Injection">WASC-19: SQL
+                        Injection</a><br />
+                    <a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html">OWASP:
+                        SQL Injection
+                        Prevention Cheat Sheet</a><br />
+                    <a href="https://cheatsheetseries.owasp.org/cheatsheets/Query_Parameterization_Cheat_Sheet.html">OWASP:
+                        Query
+                        Parameterization Cheat Sheet</a><br />
+                    <a href="http://capec.mitre.org/data/definitions/66.html">CAPEC-66: SQL Injection</a><br />
+                    <a href="http://bobby-tables.com/csharp">Bobby Tables: A guide to preventing SQL injection</a>
+                </p>
+                <div id="SCS0003"></div>
+
+                <h3 id="scs0003---xpath-injection">SCS0003 - XPath Injection</h3>
+                <p>The dynamic value passed to the XPath query should be validated.</p>
+                <h4 id="risk-2">Risk</h4>
+                <p>If the user input is not properly filtered, a malicious user could extend the XPath query.</p>
+                <h4 id="vulnerable-code-2">Vulnerable Code</h4>
+                <pre><code class="language-cs">var doc = new XmlDocument {XmlResolver = null};
+doc.Load("/config.xml");
+var results = doc.SelectNodes("/Config/Devices/Device[id='" + input + "']");
+</code></pre>
+                <h4 id="solution-2">Solution</h4>
+                <pre><code class="language-cs">Regex rgx = new Regex(@"^[a-zA-Z0-9]+$");
+if(rgx.IsMatch(input)) //Additional validation
+{
+    XmlDocument doc = new XmlDocument {XmlResolver = null};
+    doc.Load("/config.xml");
+    var results = doc.SelectNodes("/Config/Devices/Device[id='" + input + "']");
+}
+</code></pre>
+                <h4 id="references-3">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/643.html">CWE-643: Improper Neutralization of Data
+                        within XPath Expressions (‘XPath Injection’)</a><br />
+                    <a href="http://projects.webappsec.org/w/page/13247005/XPath%20Injection">WASC-39: XPath
+                        Injection</a><br />
+                    <a href="https://owasp.org/www-community/attacks/XPATH_Injection">OWASP: XPATH Injection</a><br />
+                    <a href="http://media.blackhat.com/bh-eu-12/Siddharth/bh-eu-12-Siddharth-Xpath-WP.pdf">Black Hat
+                        Europe 2012: Hacking XPath 2.0</a>
+                </p>
+
+                <div id="SCS0007"></div>
+
+                <h3 id="scs0007---xml-external-entity-injection-xxe">SCS0007 - XML eXternal Entity Injection (XXE)</h3>
+                <p>The XML parser is configured incorrectly. The operation could be vulnerable to XML eXternal Entity
+                    (XXE) processing.</p>
+                <h4 id="risk-3">Risk</h4>
+                <h4 id="vulnerable-code-3">Vulnerable Code</h4>
+                <p>Prior to .NET 4.5.2</p>
+                <pre><code class="language-cs">// DTD expansion is enabled by default
+XmlReaderSettings settings = new XmlReaderSettings();
+XmlReader reader = XmlReader.Create(inputXml, settings);
+</code></pre>
+                <pre><code class="language-cs">XmlDocument xmlDoc = new XmlDocument();
+xmlDoc.Load(pathToXmlFile);
+Console.WriteLine(xmlDoc.InnerText);
+</code></pre>
+                <h4 id="solution-3">Solution</h4>
+                <p>Prior to .NET 4.5.2</p>
+                <pre><code class="language-cs">var settings = new XmlReaderSettings();
+// Prior to .NET 4.0
+settings.ProhibitDtd = true; // default is false!
+// .NET 4.0 - .NET 4.5.2
+settings.DtdProcessing = DtdProcessing.Prohibit; // default is DtdProcessing.Parse!
+
+XmlReader reader = XmlReader.Create(inputXml, settings);
+</code></pre>
+                <pre><code class="language-cs">XmlDocument xmlDoc = new XmlDocument();
+xmlDoc.XmlResolver = null; // Setting this to NULL disables DTDs - Its NOT null by default.
+xmlDoc.Load(pathToXmlFile);
+Console.WriteLine(xmlDoc.InnerText);
+</code></pre>
+                <p>.NET 4.5.2 and later</p>
+
+                <p>In .NET Framework versions 4.5.2 and up, XmlTextReader’s internal XmlResolver is set to null by
+                    default, making the XmlTextReader ignore DTDs by default. The XmlTextReader can become unsafe if if
+                    you create your own non-null XmlResolver
+                    with default or unsafe settings.</p>
+                <h4 id="references-4">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML
+                        External Entity Reference (‘XXE’)</a><br />
+                    <a
+                        href="https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html">OWASP.org:
+                        XML External Entity (XXE) Prevention Cheat Sheet (.NET)</a><br />
+                    <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">OWASP.org:
+                        XML
+                        External Entity (XXE) Processing</a><br />
+                    <a href="http://www.ws-attacks.org/index.php/XML_Entity_Expansion">WS-Attacks.org: XML Entity
+                        Expansion</a><br />
+                    <a href="http://www.ws-attacks.org/index.php/XML_External_Entity_DOS">WS-Attacks.org: XML External
+                        Entity DOS</a><br />
+                    <a href="http://www.ws-attacks.org/index.php/XML_Entity_Reference_Attack">WS-Attacks.org: XML Entity
+                        Reference Attack</a><br />
+                    <a href="http://blog.h3xstream.com/2014/06/identifying-xml-external-entity.html">Identifying Xml
+                        eXternal Entity vulnerability (XXE)</a>
+                </p>
+                <div id="SCS0018"></div>
+
+                <h3 id="scs0018---path-traversal">SCS0018 - Path Traversal</h3>
+                <p>A path traversal attack (also known as directory traversal) aims to access files and directories that
+                    are stored outside the expected directory.By manipulating variables that reference files with
+                    “dot-dot-slash (../)” sequences and its
+                    variations or by using absolute file paths, it may be possible to access arbitrary files and
+                    directories stored on file system including application source code or configuration and critical
+                    system files.</p>
+                <h4 id="risk-4">Risk</h4>
+                <p>With a malicious relative path, an attacker could reach a secret file.</p>
+                <h4 id="vulnerable-code-4">Vulnerable Code</h4>
+                <pre><code class="language-cs">[RedirectingAction]
+public ActionResult Download(string fileName)
+{
+    byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/ClientDocument/") + fileName);
+    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+}
+</code></pre>
+                <p>The following request downloads a file of the attacker choice:
+                    <code>http://www.address.com/Home/Download?fileName=../../somefile.txt</code>
+                </p>
+                <h4 id="solution-4">Solution</h4>
+                <p>Do not try to strip invalid characters. Fail if any unexpected character is detected.</p>
+                <pre><code class="language-cs">private static readonly char[] InvalidFilenameChars = Path.GetInvalidFileNameChars();
+
+[RedirectingAction]
+public ActionResult Download(string fileName)
+{
+    if (fileName.IndexOfAny(InvalidFilenameChars) &gt;= 0)
+        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        
+    byte[] fileBytes = System.IO.File.ReadAllBytes(Server.MapPath("~/ClientDocument/") + fileName);
+    return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
+}
+</code></pre>
+                <p>If the input is not supplied by user or a validation is in place the warning can be suppressed.</p>
+                <h4 id="references-5">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22: Improper Limitation of a Pathname to
+                        a Restricted Directory (‘Path Traversal’)</a><br />
+                    <a href="https://owasp.org/www-community/attacks/Path_Traversal">OWASP: Path Traversal</a><br />
+                    <a href="https://riseandhack.blogspot.com/2015/02/os-command-injection-path-traversal.html">OS
+                        Command Injection, Path Traversal &amp; Local File Inclusion Vulnerability - Notes</a>
+                </p>
+
+                <div id="SCS0029"></div>
+
+                <h3 id="scs0029---cross-site-scripting-xss">SCS0029 - Cross-Site Scripting (XSS)</h3>
+                <p>A potential XSS was found. The endpoint returns a variable from the client input that has not been
+                    encoded. To protect against stored XSS attacks, make sure any dynamic content coming from user or
+                    data store cannot be used to inject JavaScript
+                    on a page. Most modern frameworks will escape dynamic content by default automatically (Razor for
+                    example) or by using special syntax (<code>&lt;%: content %&gt;</code>,
+                    <code>&lt;%= HttpUtility.HtmlEncode(content) %&gt;</code>).
+                </p>
+                <h4 id="risk-5">Risk</h4>
+                <p>XSS could be used to execute unwanted JavaScript in a client’s browser. XSS can be used to steal the
+                    cookie containing the user’s session ID. There is rarely a good reason to read or manipulate cookies
+                    in client-side JavaScript, so consider
+                    marking cookies as <a href="#SCS0009">HTTP-only</a>, meaning that cookies will be received, stored,
+                    and sent by the browser, but cannot be modified or read by JavaScript.</p>
+                <h4 id="vulnerable-code-5">Vulnerable Code</h4>
+                <pre><code class="language-cs">public class TestController : Controller
+{
+    [HttpGet(""{myParam}"")]
+    public string Get(string myParam)
+    {
+        return "value " + myParam;
+    }
+}
+</code></pre>
+                <h4 id="solution-5">Solution</h4>
+                <pre><code class="language-cs">public class TestController : Controller
+{
+    [HttpGet(""{myParam}"")]
+    public string Get(string myParam)
+    {
+        return "value " + HttpUtility.HtmlEncode(myParam);
+    }
+}
+</code></pre>
+                <h4 id="references-6">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input
+                        During Web Page Generation (‘Cross-site Scripting’)</a><br />
+                    <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site
+                        Scripting</a><br />
+                    <a
+                        href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html">OWASP:
+                        XSS Prevention Cheat Sheet</a><br />
+                    <a href="https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS)">OWASP: Top
+                        10 2017-A7: Cross-Site Scripting (XSS)</a>
+                </p>
+                <div id="SCS0029_1"></div>
+
+                <h3 id="scs0029_1---cross-site-scripting-xss">SCS0029_1 - Cross-Site Scripting (XSS)</h3>
+                <p>Data is written to the browser using a raw Razor helper method: @Html.Raw(Model.Variable). This can
+                    result in Cross-Site Scripting (XSS) vulnerabilities if the data source is considered untrusted or
+                    dynamic (request parameters, database, web service, etc.).
+
+
+
+                    Instead of using the raw Razor helper method, use a Razor helper that performs automatic HTML
+                    encoding before writing it to the browser..
+                </p>
+                <h4 id="risk-5">Risk</h4>
+                <p>XSS could be used to execute unwanted JavaScript in a client’s browser. XSS can be used to steal the
+                    cookie containing the user’s session ID. There is rarely a good reason to read or manipulate cookies
+                    in client-side JavaScript, so consider
+                    marking cookies as <a href="#SCS0009">HTTP-only</a>, meaning that cookies will be received, stored,
+                    and sent by the browser, but cannot be modified or read by JavaScript.</p>
+                <h4 id="vulnerable-code-5">Vulnerable Code</h4>
+                <pre><code class="language-html">&lt;div class="loginDisplay"&gt;
+    @Html.Raw(string.Format("Welcome &lt;span class=\"bold\"&gt;{0}&lt;/span&gt;!", Model.UserName))
+&lt;/div&gt;
+</code></pre>
+                <h4 id="solution-5">Solution</h4>
+                <pre><code class="language-html">&lt;div class="loginDisplay"&gt;
+    Welcome &lt;span class="bold"&gt;@Model.UserName&lt;/span&gt;!
+&lt;/div&gt;
+</code></pre>
+                <h4 id="references-6">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input
+                        During Web Page Generation (‘Cross-site Scripting’)</a><br />
+                    <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site
+                        Scripting</a><br />
+                    <a
+                        href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html">OWASP:
+                        XSS Prevention Cheat Sheet</a><br />
+                    <a href="https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS)">OWASP: Top
+                        10 2017-A7: Cross-Site Scripting (XSS)</a>
+                </p>
+                <div id="SCS0029_2"></div>
+
+                <h3 id="scs0029_2---cross-site-scripting-xss">SCS0029_2 - Cross-Site Scripting (XSS)</h3>
+                <p>Data is written to the browser using the raw WriteLiteral method. This can result in Cross-Site
+                    Scripting (XSS) vulnerabilities if the data source is considered untrusted or dynamic (request
+                    parameters, database, web service, etc.).
+
+
+
+                    Instead of using the raw WriteLiteral method, use a Razor helper that performs automatic HTML
+                    encoding before writing it to the browser.).
+                </p>
+                <h4 id="risk-5">Risk</h4>
+                <p>XSS could be used to execute unwanted JavaScript in a client’s browser. XSS can be used to steal the
+                    cookie containing the user’s session ID. There is rarely a good reason to read or manipulate cookies
+                    in client-side JavaScript, so consider
+                    marking cookies as <a href="#SCS0009">HTTP-only</a>, meaning that cookies will be received, stored,
+                    and sent by the browser, but cannot be modified or read by JavaScript.</p>
+                <h4 id="vulnerable-code-5">Vulnerable Code</h4>
+                <pre><code class="language-html">&lt;div class="loginDisplay"&gt;
+@{
+    WriteLiteral(string.Format("Welcome &lt;span class=\"bold\"&gt;{0}&lt;/span&gt;!", Model.UserName));
+}
+&lt;/div&gt;
+</code></pre>
+                <h4 id="solution-5">Solution</h4>
+                <pre><code class="language-html">&lt;div class="loginDisplay"&gt;
+    Welcome &lt;span class="bold"&gt;@Model.UserName&lt;/span&gt;!
+&lt;/div&gt;
+</code></pre>
+                <h4 id="references-6">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/79.html">CWE-79: Improper Neutralization of Input
+                        During Web Page Generation (‘Cross-site Scripting’)</a><br />
+                    <a href="http://projects.webappsec.org/w/page/13246920/Cross%20Site%20Scripting">WASC-8: Cross Site
+                        Scripting</a><br />
+                    <a
+                        href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html">OWASP:
+                        XSS Prevention Cheat Sheet</a><br />
+                    <a href="https://owasp.org/www-project-top-ten/2017/A7_2017-Cross-Site_Scripting_(XSS)">OWASP: Top
+                        10 2017-A7: Cross-Site Scripting (XSS)</a>
+                </p>
+                <div id="SCS0026"></div>
+
+                <h3 id="scs0026---ldap-distinguished-name-injection">SCS0026 - LDAP Distinguished Name Injection</h3>
+                <p>The dynamic value passed to the LDAP query should be validated.</p>
+                <h4 id="risk-6">Risk</h4>
+                <p>If the user input is not properly filtered, a malicious user could extend the LDAP query.</p>
+                <h4 id="vulnerable-code-6">Vulnerable Code</h4>
+                <pre><code class="language-cs">var dir = new DirectoryEntry();
+dir.Path = $"GC://DC={input},DC=com";
+</code></pre>
+                <h4 id="solution-6">Solution</h4>
+                <p>Use proper encoder (<code>LdapFilterEncode</code> or <code>LdapDistinguishedNameEncode</code>) from
+                    <a href="https://www.nuget.org/packages/AntiXSS/">AntiXSS library</a>:
+                </p>
+                <pre><code class="language-cs">var dir = new DirectoryEntry();
+dir.Path = $"GC://DC={Encoder.LdapDistinguishedNameEncode(input)},DC=com";
+</code></pre>
+                <h4 id="references-7">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/90.html">CWE-90: Improper Neutralization of Special
+                        Elements used in an LDAP Query (‘LDAP Injection’)</a><br />
+                    <a href="http://projects.webappsec.org/w/page/13246947/LDAP%20Injection">WASC-29: LDAP
+                        Injection</a><br />
+                    <a href="https://owasp.org/www-community/attacks/LDAP_Injection">OWASP: LDAP Injection</a><br />
+                    <a href="https://cheatsheetseries.owasp.org/cheatsheets/LDAP_Injection_Prevention_Cheat_Sheet.html">OWASP:
+                        LDAP
+                        Injection Prevention Cheat Sheet</a><br />
+                    <a
+                        href="https://docs.microsoft.com/vi-vn/archive/blogs/securitytools/ldap-injection-and-mitigation">MSDN
+                        Blog - Security Tools: LDAP Injection and mitigation</a>
+                </p>
+                <div id="SCS0031"></div>
+
+                <h3 id="scs0031---ldap-filter-injection">SCS0031 - LDAP Filter Injection</h3>
+                <p>The dynamic value passed to the LDAP query should be validated.</p>
+                <h4 id="risk-7">Risk</h4>
+                <p>If the user input is not properly filtered, a malicious user could extend the LDAP query.</p>
+                <h4 id="vulnerable-code-7">Vulnerable Code</h4>
+                <pre><code class="language-cs">var searcher = new DirectorySearcher();
+searcher.Filter = "(cn=" + input + ")";
+</code></pre>
+                <h4 id="solution-7">Solution</h4>
+                <p>Use proper encoder (<code>LdapFilterEncode</code> or <code>LdapDistinguishedNameEncode</code>) from
+                    <a href="https://www.nuget.org/packages/AntiXSS/">AntiXSS library</a>:
+                </p>
+                <pre><code class="language-cs">var searcher = new DirectorySearcher();
+searcher.Filter = "(cn=" + Encoder.LdapFilterEncode(input) + ")";
+</code></pre>
+                <h4 id="references-8">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/90.html">CWE-90: Improper Neutralization of Special
+                        Elements used in an LDAP Query (‘LDAP Injection’)</a><br />
+                    <a href="http://projects.webappsec.org/w/page/13246947/LDAP%20Injection">WASC-29: LDAP
+                        Injection</a><br />
+                    <a href="https://owasp.org/www-community/attacks/LDAP_Injection">OWASP: LDAP Injection</a><br />
+                    <a href="https://cheatsheetseries.owasp.org/cheatsheets/LDAP_Injection_Prevention_Cheat_Sheet.html">OWASP:
+                        LDAP
+                        Injection Prevention Cheat Sheet</a><br />
+                    <a
+                        href="https://docs.microsoft.com/vi-vn/archive/blogs/securitytools/ldap-injection-and-mitigation">MSDN
+                        Blog - Security Tools: LDAP Injection and mitigation</a>
+                </p>
+                <div id="SCS0035"></div>
+
+                <h3 id="scs0035---server-side-request-forgery">SCS0035 - Server-Side Request Forgery </h3>
+                <p>Server-side Request Forgery (SSRF) vulnerabilities occur when an application requests data from a URL
+                    supplied from an untrusted location (e.g. request parameter, web service API, database).</p>
+                <h4 id="risk-7">Risk</h4>
+                <p>Attackers can supply a malicious URL to the application, which can allow unauthorized access to
+                    secrets, database data, and files hosted on the server. Common examples include cloud meta-data
+                    endpoints (e.g. http://169.254.169.254/), database administrator REST APIs, or local file URIs (e.g.
+                    file://).</p>
+                <h4 id="vulnerable-code-7">Vulnerable Code</h4>
+                <pre><code class="language-cs">public async IActionResult Get(string url)
+{
+    var client = new HttpClient();
+    var request = client.GetAsync(url);                       
+    var json = await result.Content.ReadAsStringAsync();
+    return JsonConvert.DeserializeObject<GetResult>(json);
+}
+</code></pre>
+                <h4 id="solution-7">Solution</h4>
+                <p>Validate incoming URLs against a strict list of approved URIs reject everything else.
+                </p>
+                <pre><code class="language-cs">public async IActionResult Get(Guid urlId)
+{
+    //Pull valid endpoints from the configuration file
+    List<Endpoint> endpoints = GetEndpoints();
+                      
+    //Verify the endpoint exists
+    Endpoint e = endpoints.FirstOrDefault(i => i.Id == urlId);
+    if (e == null)
+        throw new ArgumentException("Invalid endpoint id.");
+                         
+    var client = new HttpClient();
+    var request = client.GetAsync(e.Url);                       
+    var json = await result.Content.ReadAsStringAsync();
+    return JsonConvert.DeserializeObject<GetResult>(json);
+}
+</code></pre>
+                <h4 id="references-8">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/918.html">CWE-918: Server-Side Request Forgery
+                        (SSRF)</a><br />
+                    <a href="https://owasp.org/www-community/attacks/Server_Side_Request_Forgery">OWASP: Server-Side
+                        Request Forgery</a><br />
+                    <a
+                        href="https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html">OWASP:
+                        Server-Side Request Forgery Prevention Cheat Sheet</a><br />
+                </p>
+
+                <div id="SCS0036"></div>
+
+                <h3 id="scs0036---server-side-template-injection">SCS0036 - Server-Side Template Injection</h3>
+                <p>Server-side template injection attacks can occur when user input is concatenated directly into a
+                    template, rather than passed in as data.</p>
+                <h4 id="risk-7">Risk</h4>
+                <p> This allows attackers to inject arbitrary template directives in order to manipulate the template
+                    engine, often enabling them to take complete control of the server. As the name suggests,
+                    server-side template injection payloads are delivered and evaluated server-side, potentially making
+                    them much more dangerous than a typical client-side template injection..</p>
+                <h4 id="vulnerable-code-7">Vulnerable Code</h4>
+                <pre><code class="language-cs">[HttpGet]
+[Route("page")]
+public ActionResult Index(string name)
+{
+    var razorTpl = $"Hello {name}!";
+    ViewBag.RenderedTemplate = Razor.Parse(razorTpl);
+    ViewBag.Template = razorTpl;
+    return View();
+}
+</code></pre>
+                <h4 id="solution-7">Solution</h4>
+                <p>RazorEngine is a templating engine built on the Razor parsing engine. It allows the use of the Razor
+                    syntax to build dynamic templates. This example passes the name variable, using a dynamic model to
+                    be consumed within the template context in a safe manner.
+                </p>
+                <pre><code class="language-cs">[HttpGet]
+[Route("page")]
+public ActionResult Index(string name)
+{
+    var razorTpl = "Hello @Model.name!";
+    var result = Engine.Razor.RunCompile(razorTpl, "templateKey", null, new { name = name });
+    return result;
+}
+</code></pre>
+                <h4 id="references-8">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/94.html">CWE - CWE-94: Improper Control of Generation
+                        of Code (‘Code Injection’)</a><br />
+                    <a href="https://cwe.mitre.org/data/definitions/95.html">CWE - CWE-95: Improper Neutralization of
+                        Directives in Dynamically Evaluated Code (‘Eval Injection’)</a><br />
+                    <a href="https://portswigger.net/blog/server-side-template-injection">PortSwigger - Server Side
+                        Template Injection</a><br />
+
+                </p>
+
+                <h2 id="cryptography">Cryptography</h2>
+                <div id="SCS0004"></div>
+
+                <h3 id="scs0004---certificate-validation-disabled">SCS0004 - Certificate Validation Disabled</h3>
+                <p>Certificate Validation has been disabled. The communication could be intercepted.</p>
+                <h4 id="risk-8">Risk</h4>
+                <p>Disabling certificate validation is often used to connect easily to a host that is not signed by a
+                    root <a href="http://en.wikipedia.org/wiki/Certificate_authority">certificate authority</a>. As a
+                    consequence, this is vulnerable to
+                    <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">Man-in-the-middle attacks</a> since
+                    the client will trust any certificate.
+                </p>
+                <h4 id="vulnerable-code-8">Vulnerable Code</h4>
+                <pre><code class="language-cs">ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) =&gt; true;
+</code></pre>
+                <h4 id="solution-8">Solution</h4>
+                <ul>
+                    <li>Make sure the validation is disabled only in testing environment or</li>
+                    <li>Use <a
+                            href="https://owasp.org/www-community/controls/Certificate_and_Public_Key_Pinning">certificate
+                            pinning</a> for development or</li>
+                    <li>Use properly signed certificates for development</li>
+                </ul>
+
+                <pre><code class="language-cs">#if DEBUG
+    ServicePointManager.ServerCertificateValidationCallback += (sender, cert, chain, sslPolicyErrors) =&gt; true;
+#endif
+</code></pre>
+                <h4 id="references-9">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/295.html">CWE-295: Improper Certificate
+                        Validation</a><br />
+                    <a
+                        href="http://projects.webappsec.org/w/page/13246945/Insufficient%20Transport%20Layer%20Protection">WASC-04:
+                        Insufficient Transport Layer Protection</a>
+                </p>
+                <div id="SCS0005"></div>
+
+                <h3 id="scs0005---weak-random-number-generator">SCS0005 - Weak Random Number Generator</h3>
+                <p>The random numbers generated could be predicted.</p>
+                <h4 id="risk-9">Risk</h4>
+                <p>The use of a predictable random value can lead to vulnerabilities when used in certain security
+                    critical contexts.</p>
+                <h4 id="vulnerable-code-9">Vulnerable Code</h4>
+                <pre><code class="language-cs">var rnd = new Random();
+byte[] buffer = new byte[16];
+rnd.GetBytes(buffer);
+return BitConverter.ToString(buffer);
+</code></pre>
+                <h4 id="solution-9">Solution</h4>
+                <pre><code class="language-cs">using System.Security.Cryptography;
+var rnd = RandomNumberGenerator.Create();
+</code></pre>
+                <h4 id="references-10">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/338.html">CWE-338: Use of Cryptographically Weak
+                        Pseudo-Random Number Generator (PRNG)</a><br />
+                    <a href="https://owasp.org/www-community/vulnerabilities/Insecure_Randomness">OWASP: Insecure
+                        Randomness</a>
+                </p>
+
+                <div id="SCS0006"></div>
+
+                <h3 id="scs0006---weak-hashing-function">SCS0006 - Weak hashing function</h3>
+                <p>MD5 or SHA1 have known collision weaknesses and are no longer considered strong hashing algorithms.
+                </p>
+                <h4 id="vulnerable-code-10">Vulnerable Code</h4>
+                <pre><code class="language-cs">var hashProvider = new SHA1CryptoServiceProvider();
+var hash = hashProvider.ComputeHash(str);
+</code></pre>
+                <h4 id="solution-10">Solution</h4>
+                <p>Use SHA256 or SHA512. Notice, that hashing algorithms are designed to be fast and shouldn’t be used
+                    directly for hashing passwords. Use <a href="https://crackstation.net/hashing-security.htm">adaptive
+                        algorithms</a> for the purpose.</p>
+                <pre><code class="language-cs">var hashProvider = SHA256Managed.Create();
+var hash = hashProvider.ComputeHash(str);
+</code></pre>
+                <h4 id="references-11">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky
+                        Cryptographic Algorithm</a><br />
+                    <a
+                        href="https://msdn.microsoft.com/en-us/library/system.security.cryptography.sha256(v=vs.110).aspx">MSDN:
+                        SHA256 Class documentation</a><br />
+                    <a href="https://crackstation.net/hashing-security.htm">Salted Password Hashing - Doing it Right</a>
+                </p>
+                <div id="SCS0010"></div>
+
+                <h3 id="scs0010---weak-cipher-algorithm">SCS0010 - Weak cipher algorithm</h3>
+                <p>DES and 3DES are not considered a strong cipher for modern applications. Currently, NIST recommends
+                    the usage of AES block ciphers instead.</p>
+                <h4 id="risk-10">Risk</h4>
+                <p>Broken or deprecated ciphers have typically known weakness. A attacker might be able to brute force
+                    the secret key use for the encryption. The confidentiality and integrity of the information
+                    encrypted is at risk.</p>
+                <h4 id="vulnerable-code-11">Vulnerable Code</h4>
+                <pre><code class="language-cs">DES DESalg = DES.Create();
+
+// Create a string to encrypt. 
+byte[] encrypted;
+ICryptoTransform encryptor = DESalg.CreateEncryptor(key, zeroIV);
+
+// Create the streams used for encryption. 
+using (MemoryStream msEncrypt = new MemoryStream())
+{
+    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt,
+                                                     encryptor,
+                                                     CryptoStreamMode.Write))
+    {
+        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+        {
+            //Write all data to the stream.
+            swEncrypt.Write(Data);
+        }
+        encrypted = msEncrypt.ToArray();
+        return encrypted;
+    }
+}
+</code></pre>
+                <h4 id="solution-11">Solution</h4>
+                <p>Use AES for symmetric encryption.</p>
+                <pre><code class="language-cs">// Create a string to encrypt. 
+byte[] encrypted;
+var encryptor = new AesManaged();
+encryptor.Key = key;
+encryptor.GenerateIV();
+var iv = encryptor.IV;
+
+// Create the streams used for encryption. 
+using (MemoryStream msEncrypt = new MemoryStream())
+{
+    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt,
+                                                     encryptor.CreateEncryptor(),
+                                                     CryptoStreamMode.Write))
+    {
+        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+        {
+            //Write all data to the stream.
+            swEncrypt.Write(Data);
+        }
+        encrypted = msEncrypt.ToArray();
+        return encrypted;
+    }
+}
+</code></pre>
+                <p>Notice that AES itself doesn’t protect from encrypted data tampering. For an example of authenticated
+                    encryption see the <a href="#SCS0013">Solution in Weak Cipher Mode</a></p>
+                <h4 id="references-12">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky
+                        Cryptographic Algorithm</a><br />
+                    <a href="http://www.nist.gov/itl/fips/060205_des.cfm">NIST Withdraws Outdated Data Encryption
+                        Standard</a><br />
+                    <a href="http://stackoverflow.com/questions/202011/encrypt-and-decrypt-a-string/10366194#10366194">StackOverflow:
+                        Authenticated encryption example</a>
+                </p>
+                <div id="SCS0013"></div>
+
+                <h3 id="scs0013---potential-usage-of-weak-ciphermode-mode">SCS0013 - Potential usage of weak CipherMode
+                    mode</h3>
+                <p>The cipher text produced is susceptible to alteration by an adversary.</p>
+                <h4 id="risk-11">Risk</h4>
+                <p>The cipher provides no way to detect that the data has been tampered with. If the cipher text can be
+                    controlled by an attacker, it could be altered without detection. The use of AES in CBC mode with a
+                    HMAC is recommended guaranteeing integrity
+                    and confidentiality.</p>
+                <h4 id="vulnerable-code-12">Vulnerable Code</h4>
+                <pre><code class="language-cs">using (var aes = new AesManaged {
+    KeySize = KeyBitSize,
+    BlockSize = BlockBitSize,
+    Mode = CipherMode.OFB,
+    Padding = PaddingMode.PKCS7
+})
+{
+    using (var encrypter = aes.CreateEncryptor(cryptKey, new byte[16]))
+    using (var cipherStream = new MemoryStream())
+    {
+        using (var cryptoStream = new CryptoStream(cipherStream, encrypter, CryptoStreamMode.Write))
+        using (var binaryWriter = new BinaryWriter(cryptoStream))
+        {
+            //Encrypt Data
+            binaryWriter.Write(secretMessage);
+        }
+        cipherText = cipherStream.ToArray();
+    }
+}
+//Missing HMAC suffix to assure integrity
+</code></pre>
+                <h4 id="solution-12">Solution</h4>
+                <p>Using bouncy castle:</p>
+                <pre><code class="language-cs">using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+
+public static readonly int BlockBitSize = 128;
+public static readonly int KeyBitSize = 256;
+
+public static byte[] SimpleEncrypt(byte[] secretMessage, byte[] key)
+{
+    //User Error Checks
+    if (key == null || key.Length != KeyBitSize / 8)
+        throw new ArgumentException(String.Format("Key needs to be {0} bit!", KeyBitSize), "key");
+
+    if (secretMessage == null || secretMessage.Length == 0)
+        throw new ArgumentException("Secret Message Required!", "secretMessage");
+
+    //Using random nonce large enough not to repeat
+    var nonce = new byte[NonceBitSize / 8];
+    Random.NextBytes(nonce, 0, nonce.Length);
+
+    var cipher = new GcmBlockCipher(new AesFastEngine());
+    var parameters = new AeadParameters(new KeyParameter(key), MacBitSize, nonce, new byte[0]);
+    cipher.Init(true, parameters);
+
+    //Generate Cipher Text With Auth Tag
+    var cipherText = new byte[cipher.GetOutputSize(secretMessage.Length)];
+    var len = cipher.ProcessBytes(secretMessage, 0, secretMessage.Length, cipherText, 0);
+    cipher.DoFinal(cipherText, len);
+
+    //Assemble Message
+    using (var combinedStream = new MemoryStream())
+    {
+        using (var binaryWriter = new BinaryWriter(combinedStream))
+        {
+            //Prepend Nonce
+            binaryWriter.Write(nonce);
+            //Write Cipher Text
+            binaryWriter.Write(cipherText);
+        }
+        return combinedStream.ToArray();
+    }
+}
+</code></pre>
+                <p>Custom implementation of Encrypt and HMAC:</p>
+                <pre><code class="language-cs">using System.IO;
+using System.Security.Cryptography;
+public static byte[] SimpleEncrypt(byte[] secretMessage, byte[] cryptKey, byte[] authKey, byte[] nonSecretPayload = null)
+{
+    //User Error Checks
+    if (cryptKey == null || cryptKey.Length != KeyBitSize / 8)
+        throw new ArgumentException(String.Format("Key needs to be {0} bit!", KeyBitSize), "cryptKey");
+
+    if (authKey == null || authKey.Length != KeyBitSize / 8)
+        throw new ArgumentException(String.Format("Key needs to be {0} bit!", KeyBitSize), "authKey");
+
+    if (secretMessage == null || secretMessage.Length &lt; 1)
+        throw new ArgumentException("Secret Message Required!", "secretMessage");
+
+    byte[] cipherText;
+    byte[] iv;
+    using (var aes = new AesManaged {
+        KeySize = KeyBitSize,
+        BlockSize = BlockBitSize,
+        Mode = CipherMode.CBC,
+        Padding = PaddingMode.PKCS7
+    })
+    {
+        //Use random IV
+        aes.GenerateIV();
+        iv = aes.IV;
+        using (var encrypter = aes.CreateEncryptor(cryptKey, iv))
+        using (var cipherStream = new MemoryStream())
+        {
+            using (var cryptoStream = new CryptoStream(cipherStream, encrypter, CryptoStreamMode.Write))
+            using (var binaryWriter = new BinaryWriter(cryptoStream))
+            {
+            //Encrypt Data
+            binaryWriter.Write(secretMessage);
+            }
+            cipherText = cipherStream.ToArray();
+        }
+    }
+    //Assemble encrypted message and add authentication
+    using (var hmac = new HMACSHA256(authKey))
+    using (var encryptedStream = new MemoryStream())
+    {
+        using (var binaryWriter = new BinaryWriter(encryptedStream))
+        {
+            //Prepend IV
+            binaryWriter.Write(iv);
+            //Write Ciphertext
+            binaryWriter.Write(cipherText);
+            binaryWriter.Flush();
+            //Authenticate all data
+            var tag = hmac.ComputeHash(encryptedStream.ToArray());
+            //Postpend tag
+            binaryWriter.Write(tag);
+        }
+        return encryptedStream.ToArray();
+    }
+}
+</code></pre>
+                <h4 id="references-13">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/327.html">CWE-327: Use of a Broken or Risky
+                        Cryptographic Algorithm</a><br />
+                    <a href="http://en.wikipedia.org/wiki/Authenticated_encryption">Wikipedia: Authenticated
+                        encryption</a><br />
+                    <a href="http://csrc.nist.gov/groups/ST/toolkit/BCM/modes_development.html#01">NIST: Authenticated
+                        Encryption Modes</a><br />
+                    <a href="http://capec.mitre.org/data/definitions/463.html">CAPEC: Padding Oracle Crypto
+                        Attack</a><br />
+                    <a href="https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Electronic_Codebook_(ECB)">Wikipedia:
+                        ECB mode</a>
+                </p>
+                <h2 id="cookies">Cookies</h2>
+                <div id="SCS0008"></div>
+
+                <h3 id="scs0008---cookie-without-ssl-flag">SCS0008 - Cookie Without SSL Flag</h3>
+                <p>It is recommended to specify the Secure flag to new cookie.</p>
+                <h4 id="risk-12">Risk</h4>
+                <p>The Secure flag is a directive to the browser to make sure that the cookie is not sent by unencrypted
+                    channel</p>
+                <h4 id="vulnerable-code-13">Vulnerable Code</h4>
+                <p>The <code>requireSSL</code> value is explicitly set to <code>false</code> or the default is left.</p>
+                <pre><code class="language-xml">&lt;httpCookies requireSSL="false" [..] /&gt;
+</code></pre>
+                <pre><code class="language-cs">// default is left
+var cookie = new HttpCookie("test");
+// or explicitly set to false
+var cookie = new HttpCookie("test");
+cookie.Secure = false;
+</code></pre>
+                <h4 id="solution-13">Solution</h4>
+                <pre><code class="language-xml">&lt;httpCookies requireSSL="true" [..] /&gt;
+</code></pre>
+                <pre><code class="language-cs">var cookie = new HttpCookie("test");
+cookie.Secure = true; //Add this flag
+cookie.HttpOnly = true;
+</code></pre>
+                <h4 id="references-14">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/614.html">CWE-614: Sensitive Cookie in HTTPS Session
+                        Without ‘Secure’ Attribute</a><br />
+                    <a href="https://owasp.org/www-community/controls/SecureCookieAttribute">OWASP: Secure
+                        Flag</a><br />
+                    <a href="https://www.rapid7.com/db/vulnerabilities/http-cookie-secure-flag">Rapid7: Missing Secure
+                        Flag From SSL Cookie</a>
+                </p>
+                <div id="SCS0009"></div>
+
+                <h3 id="scs0009---cookie-without-httponly-flag">SCS0009 - Cookie Without HttpOnly Flag</h3>
+                <p>It is recommended to specify the HttpOnly flag to new cookie.</p>
+                <h4 id="risk-13">Risk</h4>
+                <p>Cookies that doesn’t have the flag set are available to JavaScript running on the same domain. When a
+                    user is the target of a “Cross-Site Scripting”, the attacker would benefit greatly from getting the
+                    session id.</p>
+                <h4 id="vulnerable-code-14">Vulnerable Code</h4>
+                <p>The <code>httpOnlyCookies</code> value is explicitly set to <code>false</code> or the default is
+                    left.</p>
+                <pre><code class="language-xml">&lt;httpCookies httpOnlyCookies="false" [..] /&gt;
+</code></pre>
+                <pre><code class="language-cs">// default is left
+var cookie = new HttpCookie("test");
+// or explicitly set to false
+var cookie = new HttpCookie("test");
+cookie.HttpOnly = false;
+</code></pre>
+                <h4 id="solution-14">Solution</h4>
+                <pre><code class="language-xml">&lt;httpCookies httpOnlyCookies="true" [..] /&gt;
+</code></pre>
+                <pre><code class="language-cs">var cookie = new HttpCookie("test");
+cookie.Secure = true;
+cookie.HttpOnly = true; //Add this flag
+</code></pre>
+                <h4 id="references-15">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/1004.html">CWE-1004: Sensitive Cookie Without
+                        ‘HttpOnly’ Flag</a><br />
+                    <a href="http://blog.codinghorror.com/protecting-your-cookies-httponly/">Coding Horror blog:
+                        Protecting Your Cookies: HttpOnly</a><br />
+                    <a href="https://owasp.org/www-community/HttpOnly">OWASP: HttpOnly</a><br />
+                    <a href="https://www.rapid7.com/db/vulnerabilities/http-cookie-http-only-flag">Rapid7: Missing
+                        HttpOnly Flag From Cookie</a>
+                </p>
+                <h2 id="view-state">View State</h2>
+                <div id="SCS0023"></div>
+
+                <h3 id="scs0023---view-state-not-encrypted">SCS0023 - View State Not Encrypted</h3>
+                <p>The <code>viewStateEncryptionMode</code> is not set to <code>Always</code> in configuration file.</p>
+                <h4 id="risk-14">Risk</h4>
+                <p>Web Forms controls use hidden base64 encoded fields to store state information. If sensitive
+                    information is stored there it may be leaked to the client side.</p>
+                <h4 id="vulnerable-code-15">Vulnerable Code</h4>
+                <p>The default value is <code>Auto</code>:</p>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;pages [..] viewStateEncryptionMode="Auto" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <p>or</p>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;pages [..] viewStateEncryptionMode="Never" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="solution-15">Solution</h4>
+                <p>Explicitly set to <code>Always</code> and encrypt with with the .NET <a
+                        href="https://msdn.microsoft.com/en-us/library/w8h3skw9(v=vs.100).aspx">machine key</a>:</p>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;pages [..] viewStateEncryptionMode="Always" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="references-16">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/554.html">CWE-554: ASP.NET Misconfiguration: Not
+                        Using Input Validation Framework</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/950xf363(v=vs.100).aspx">MSDN: pages Element
+                        (ASP.NET Settings Schema)</a><br />
+                    <a
+                        href="https://msdn.microsoft.com/en-us/library/system.web.configuration.pagessection.viewstateencryptionmode(v=vs.100).aspx">MSDN:
+                        ViewStateEncryptionMode Property</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/w8h3skw9(v=vs.100).aspx">MSDN: machineKey Element
+                        (ASP.NET Settings Schema)</a>
+                </p>
+
+                <div id="SCS0024"></div>
+
+                <h3 id="scs0024---view-state-mac-disabled">SCS0024 - View State MAC Disabled</h3>
+                <p>The <code>enableViewStateMac</code> is disabled in configuration file. (This feature cannot be
+                    disabled starting .NET 4.5.1)</p>
+                <h4 id="risk-15">Risk</h4>
+                <p>The view state could be altered by an attacker.</p>
+                <h4 id="vulnerable-code-16">Vulnerable Code</h4>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;pages [..] enableViewStateMac="false" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="solution-16">Solution</h4>
+                <p>The default value is secure - <code>true</code>. Or set it explicitly:</p>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;pages [..] enableViewStateMac="true" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="references-17">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/554.html">CWE-554: ASP.NET Misconfiguration: Not
+                        Using Input Validation Framework</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/950xf363(v=vs.100).aspx">MSDN: pages Element
+                        (ASP.NET Settings Schema)</a>
+                </p>
+                <h2 id="request-validation">Request Validation</h2>
+                <div id="SCS0017"></div>
+
+                <h3 id="scs0017---request-validation-disabled-attribute">SCS0017 - Request Validation Disabled
+                    (Attribute)</h3>
+                <p>Request validation is disabled. Request validation allows the filtering of some <a
+                        href="#SCS0029">XSS</a> patterns submitted to the application.</p>
+                <h4 id="risk-16">Risk</h4>
+                <p><a href="#SCS0029">XSS</a></p>
+                <h4 id="vulnerable-code-17">Vulnerable Code</h4>
+                <pre><code class="language-cs">public class TestController
+{
+    [HttpPost]
+    [ValidateInput(false)]
+    public ActionResult ControllerMethod(string input) {
+        return f(input);
+    }
+}
+</code></pre>
+                <h4 id="solution-17">Solution</h4>
+                <p>Although it performs blacklisting (that is worse than whitelisting by definition) and you should not
+                    rely solely on it for XSS protection, it provides a first line of defense for your application. Do
+                    not disable the validation:</p>
+                <pre><code class="language-cs">public class TestController
+{
+    [HttpPost]
+    public ActionResult ControllerMethod(string input) {
+        return f(input);
+    }
+}
+</code></pre>
+                <p>Always user proper encoder (Html, Url, etc.) before displaying or using user supplied data (even if
+                    it is loaded from database).</p>
+                <h4 id="references-18">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/554.html">CWE-554: ASP.NET Misconfiguration: Not
+                        Using Input Validation Framework</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/hh882339(v=vs.110).aspx">MSDN: Request Validation
+                        in ASP.NET</a><br />
+                    <a href="https://owasp.org/www-community/ASP-NET_Request_Validation">OWASP: ASP.NET Request
+                        Validation</a><br /> See <a href="#SCS0029">XSS</a> references.
+                </p>
+                <div id="SCS0021"></div>
+
+                <h3 id="scs0021---request-validation-disabled-configuration-file">SCS0021 - Request Validation Disabled
+                    (Configuration File)</h3>
+                <p>The <code>validateRequest</code> which provides additional protection against <a
+                        href="#SCS0029">XSS</a> is disabled in configuration file.</p>
+                <h4 id="risk-17">Risk</h4>
+                <p><a href="#SCS0029">XSS</a></p>
+                <h4 id="vulnerable-code-18">Vulnerable Code</h4>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;pages [..] validateRequest="false" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="solution-18">Solution</h4>
+                <p>Although it performs blacklisting (that is worse than whitelisting by definition) and you should not
+                    rely solely on it for XSS protection, it provides a first line of defense for your application. Do
+                    not disable the validation: The default
+                    value is <code>true</code>. Or set it explicitly:</p>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;pages [..] validateRequest="true" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="references-19">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/554.html">CWE-554: ASP.NET Misconfiguration: Not
+                        Using Input Validation Framework</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/950xf363(v=vs.100).aspx">MSDN: pages Element
+                        (ASP.NET Settings Schema)</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/hh882339(v=vs.110).aspx">MSDN: Request Validation
+                        in ASP.NET</a><br />
+                    <a href="https://owasp.org/www-community/ASP-NET_Request_Validation">OWASP: ASP.NET Request
+                        Validation</a><br /> See <a href="#SCS0029">XSS</a> references.
+                </p>
+                <div id="SCS0030"></div>
+
+                <h3 id="scs0030---request-validation-is-enabled-only-for-pages-configuration-file">SCS0030 - Request
+                    validation is enabled only for pages (Configuration File)</h3>
+                <p>The <code>requestValidationMode</code> which provides additional protection against <a
+                        href="#SCS0029">XSS</a> is enabled only for pages, not for all HTTP requests in configuration
+                    file.</p>
+                <h4 id="risk-18">Risk</h4>
+                <p><a href="#SCS0029">XSS</a></p>
+                <h4 id="vulnerable-code-19">Vulnerable Code</h4>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;httpRuntime [..] requestValidationMode="2.0" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="solution-19">Solution</h4>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;httpRuntime [..] requestValidationMode="4.5" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="references-20">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/554.html">CWE-554: ASP.NET Misconfiguration: Not
+                        Using Input Validation Framework</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/950xf363(v=vs.100).aspx">MSDN: pages Element
+                        (ASP.NET Settings Schema)</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/hh882339(v=vs.110).aspx">MSDN: Request Validation
+                        in ASP.NET</a><br />
+                    <a href="https://owasp.org/www-community/ASP-NET_Request_Validation">OWASP: ASP.NET Request
+                        Validation</a><br />
+                    <a
+                        href="https://msdn.microsoft.com/en-us/library/system.web.configuration.httpruntimesection.requestvalidationmode(v=vs.110).aspx">MSDN:
+                        RequestValidationMode Property</a><br /> See <a href="#SCS0029">XSS</a> references.
+                </p>
+                <h2 id="password-management">Password Management</h2>
+                <div id="SCS0015"></div>
+
+                <h3 id="scs0015---hardcoded-password">SCS0015 - Hardcoded Password</h3>
+                <p>The password configuration to this API appears to be hardcoded.</p>
+                <h4 id="risk-19">Risk</h4>
+                <p>If hard-coded passwords are used, it is almost certain that malicious users will gain access through
+                    the account in question.</p>
+                <h4 id="vulnerable-code-20">Vulnerable Code</h4>
+                <pre><code class="language-cs">config.setPassword("NotSoSecr3tP@ssword");
+</code></pre>
+                <h4 id="solution-20">Solution</h4>
+                <p>It is recommended to externalize configuration such as password to avoid leakage of secret
+                    information. The source code or its binary form is more likely to be accessible by an attacker than
+                    a production configuration. To be managed safely,
+                    passwords and secret keys should be stored encrypted in separate configuration files. The
+                    certificate for decryption should be installed as non-exportable on the server machine.</p>
+
+                <p>Configuration file :</p>
+                <pre><code class="language-xml">&lt;configuration&gt;
+    &lt;appSettings&gt;
+    &lt;add key="api_password" value="b3e521073ca276dc2b7caf6247b6ddc72d5e2d2d" /&gt;
+  &lt;/appSettings&gt;
+&lt;/configuration&gt;
+</code></pre>
+                <p>Code:</p>
+                <pre><code class="language-cs">string apiPassword = ConfigurationManager.AppSettings["api_password"];
+config.setPassword(apiPassword);
+</code></pre>
+                <h4 id="references-21">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/259.html">CWE-259: Use of Hard-coded Password</a></p>
+                <div id="SCS0034"></div>
+
+                <h3 id="scs0034---password-requiredlength-not-set">SCS0034 - Password RequiredLength Not Set</h3>
+                <p>The RequiredLength property must be set with a minimum value of 8.</p>
+                <h4 id="risk-20">Risk</h4>
+                <p>Weak password can be guessed or brute-forced.</p>
+                <h4 id="vulnerable-code-21">Vulnerable Code</h4>
+                <p>ASP.NET Identity default is 6.</p>
+                <pre><code class="language-cs">PasswordValidator pwdv = new PasswordValidator();
+</code></pre>
+                <h4 id="solution-21">Solution</h4>
+                <p>See the solution for <a href="#SCS0033">Password Complexity</a></p>
+                <h4 id="references-22">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/521.html">CWE-521: Weak Password
+                        Requirements</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity.passwordvalidator.aspx">MSDN:
+                        ASP.NET Identity PasswordValidator Class</a>
+                </p>
+                <div id="SCS0032"></div>
+
+                <h3 id="scs0032---password-requiredlength-too-small">SCS0032 - Password RequiredLength Too Small</h3>
+                <p>The minimal length of a password is recommended to be set at least to 8.</p>
+                <h4 id="risk-21">Risk</h4>
+                <p>Weak password can be guessed or brute-forced.</p>
+                <h4 id="vulnerable-code-22">Vulnerable Code</h4>
+                <pre><code class="language-cs">PasswordValidator pwdv = new PasswordValidator
+{
+    RequiredLength = 6,
+};
+</code></pre>
+                <h4 id="solution-22">Solution</h4>
+                <p>See the solution for <a href="#SCS0033">Password Complexity</a></p>
+                <h4 id="references-23">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/521.html">CWE-521: Weak Password
+                        Requirements</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity.passwordvalidator.aspx">MSDN:
+                        ASP.NET Identity PasswordValidator Class</a>
+                </p>
+                <div id="SCS0033"></div>
+
+                <h3 id="scs0033---password-complexity">SCS0033 - Password Complexity</h3>
+                <p>PasswordValidator should have at least two requirements for better security (RequiredLength,
+                    RequireDigit, RequireLowercase, RequireUppercase and/or RequireNonLetterOrDigit).</p>
+                <h4 id="risk-22">Risk</h4>
+                <p>Weak password can be guessed or brute-forced.</p>
+                <h4 id="vulnerable-code-23">Vulnerable Code</h4>
+                <pre><code class="language-cs">PasswordValidator pwdv = new PasswordValidator
+{
+    RequiredLength = 6,
+};
+</code></pre>
+                <h4 id="solution-23">Solution</h4>
+                <pre><code class="language-cs">PasswordValidator pwdv = new PasswordValidator
+{
+    RequiredLength = 8,
+    RequireNonLetterOrDigit = true,
+    RequireDigit = true,
+    RequireLowercase = true,
+    RequireUppercase = true,
+};
+</code></pre>
+                <h4 id="references-24">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/521.html">CWE-521: Weak Password
+                        Requirements</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/microsoft.aspnet.identity.passwordvalidator.aspx">MSDN:
+                        ASP.NET Identity PasswordValidator Class</a>
+                </p>
+                <h2 id="other">Other</h2>
+                <div id="SCS0011"></div>
+
+                <h3 id="scs0011---unsafe-xslt-setting-used">SCS0011 - Unsafe XSLT setting used</h3>
+
+                <p>XSLT scripting should be enabled only if you require script support and you are working in a fully
+                    trusted environment.</p>
+
+                <h4 id="risk-23">Risk</h4>
+
+                <p>This issue may lead to Remote Code Execution (RCE) if the XML source is untrusted.</p>
+
+                <h4 id="vulnerable-code-24">Vulnerable Code</h4>
+
+                <pre><code class="language-cs">XslCompiledTransform transform = new XslCompiledTransform();
+XsltSettings settings = new XsltSettings() {EnableScript = true};
+transform.Load(xslPath, settings, null);
+// Execute the transformation.
+transform.Transform(reader, writer);
+</code></pre>
+
+                <h4 id="references-25">References</h4>
+
+                <p><a href="https://cwe.mitre.org/data/definitions/611.html">CWE-611: Improper Restriction of XML
+                        External Entity Reference</a><br />
+                    <a href="https://zerosum0x0.blogspot.com/2016/05/xml-attack-for-c-remote-code-execution.html">XML
+                        Attack for C# Remote Code Execution</a><br />
+                    <a
+                        href="https://docs.microsoft.com/en-us/dotnet/api/system.xml.xsl.xsltsettings.enablescript?view=net-5.0">XsltSettings.EnableScript
+                        Property</a>
+                </p>
+
+                <div id="SCS0012"></div>
+
+                <h3 id="scs0012---controller-method-is-potentially-vulnerable-to-authorization-bypass">SCS0012 -
+                    Controller method is potentially vulnerable to authorization bypass</h3>
+
+                <p>Neither the annotation [Authorize], nor [AllowAnonymous] is present.</p>
+
+                <h4 id="risk-24">Risk</h4>
+
+                <p>The endpoint is potentially accessible to not authorized users. If it contains sensitive information,
+                    like log files for example, it may lead to privilege escalation. The warning may be
+                    ignored/suppressed if the application is using other
+                    authorization checks. It is possible to <a href="#external-configuration-files">customize</a> the <a
+                        href="https://github.com/security-code-scan/security-code-scan/blob/6541aa9c52e856b2ce9da7d5916d8358760373da/SecurityCodeScan/Config/Main.yml#L2500">rule</a>
+                    and register the additional attributes.</p>
+
+                <h4 id="vulnerable-code-25">Vulnerable Code</h4>
+
+                <pre><code class="language-cs">public class AccountController : Controller
+{
+   public ActionResult Login()
+   {
+   }
+
+   [Authorize]
+   public ActionResult Logout()
+   {
+   }
+}
+</code></pre>
+                <h4 id="solution-24">Solution</h4>
+
+                <pre><code class="language-cs">[Authorize]
+public class AccountController : Controller
+{
+    [AllowAnonymous]
+    public ActionResult Login()
+    {
+    }
+
+    public ActionResult Logout()
+    {
+    }
+}
+</code></pre>
+
+                <h4 id="references-26">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/284.html">CWE-284: Improper Access Control</a><br />
+                    <a href="https://portswigger.net/web-security/access-control">Access control vulnerabilities and
+                        privilege escalation</a><br />
+                    <a
+                        href="https://docs.microsoft.com/en-us/aspnet/core/security/authorization/simple?view=aspnetcore-3.1">Simple
+                        authorization in ASP.NET Core</a>
+                </p>
+                <div id="SCS0016"></div>
+
+                <h3 id="scs0016---cross-site-request-forgery-csrf">SCS0016 - Cross-Site Request Forgery (CSRF)</h3>
+                <p>Anti-forgery token is missing.</p>
+                <h4 id="risk-25">Risk</h4>
+                <p>An attacker could send a link to the victim. By visiting the malicious link, a web page would trigger
+                    a POST request (because it is a blind attack - the attacker doesn’t see a response from triggered
+                    request and has no use from GET request
+                    and GET requests should not change a state on the server by definition) to the website. The victim
+                    would not be able to acknowledge that an action is made in the background, but his cookie would be
+                    automatically submitted if he is
+                    authenticated to the website. This attack does not require special interaction other than visiting a
+                    website.</p>
+                <h4 id="vulnerable-code-26">Vulnerable Code</h4>
+                <pre><code class="language-cs">public class TestController
+{
+    [HttpPost]
+    public ActionResult ControllerMethod(string input)
+    {
+        //Do an action in the context of the logged in user
+    }
+}
+</code></pre>
+                <h4 id="solution-25">Solution</h4>
+                <p>In your view:</p>
+                <pre><code class="language-html">@Html.AntiForgeryToken()
+</code></pre>
+                <p>In your controller:</p>
+                <pre><code class="language-cs">public class TestController
+{
+    [HttpPost]
+    [ValidateAntiForgeryToken] //Annotation added
+    public ActionResult ControllerMethod(string input)
+    {
+        //Do an action in the context of the logged in user
+    }
+}
+</code></pre>
+                <h4 id="references-27">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/352.html">CWE-352: Cross-Site Request Forgery
+                        (CSRF)</a><br />
+                    <a href="https://owasp.org/www-community/attacks/csrf">OWASP: Cross-Site
+                        Request Forgery</a><br />
+                    <a
+                        href="https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html">OWASP:
+                        CSRF Prevention Cheat Sheet</a>
+                </p>
+                <div id="SCS0019"></div>
+
+                <h3 id="scs0019---outputcache-conflict">SCS0019 - OutputCache Conflict</h3>
+                <p>Caching conflicts with authorization.</p>
+                <h4 id="risk-26">Risk</h4>
+                <p>Having the annotation [OutputCache] will disable the annotation [Authorize] for the requests
+                    following the first one.</p>
+                <h4 id="vulnerable-code-27">Vulnerable Code</h4>
+                <pre><code class="language-cs">[Authorize]
+public class AdminController : Controller
+{
+    [OutputCache]
+    public ActionResult Index()
+    {
+        return View();
+    }
+}
+</code></pre>
+                <h4 id="solution-26">Solution</h4>
+                <p>Remove the caching:</p>
+                <pre><code class="language-cs">[Authorize]
+public class AdminController : Controller
+{
+    public ActionResult Index()
+    {
+        return View();
+    }
+}
+</code></pre>
+                <h4 id="references-28">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/524.html">CWE-524: Use of Cache Containing Sensitive
+                        Information</a><br />
+                    <a
+                        href="https://docs.microsoft.com/en-us/aspnet/mvc/overview/older-versions-1/controllers-and-routing/improving-performance-with-output-caching-cs">Improving
+                        Performance with Output Caching</a>
+                </p>
+                <div id="SCS0022"></div>
+
+                <h3 id="scs0022---event-validation-disabled">SCS0022 - Event Validation Disabled</h3>
+                <p>The <code>enableEventValidation</code> is disabled in configuration file.</p>
+                <h4 id="risk-27">Risk</h4>
+                <p>This feature reduces the risk of unauthorized or malicious post-back requests and callbacks. It is
+                    strongly recommended that you do not disable event validation. When the EnableEventValidation
+                    property is set to true, ASP.NET validates
+                    that a control event originated from the user interface that was rendered by that control.</p>
+                <h4 id="vulnerable-code-28">Vulnerable Code</h4>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;pages [..] enableEventValidation="false" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="solution-27">Solution</h4>
+                <p>The default value is secure - <code>true</code>. Or set it explicitly:</p>
+                <pre><code class="language-xml">&lt;system.web&gt;
+   ...
+   &lt;pages [..] enableEventValidation="true" [..]/&gt;
+   ...
+&lt;/system.web&gt;
+</code></pre>
+                <h4 id="references-29">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/554.html">CWE-554: ASP.NET Misconfiguration: Not
+                        Using Input Validation Framework</a><br />
+                    <a href="https://msdn.microsoft.com/en-us/library/950xf363(v=vs.100).aspx">MSDN: pages Element
+                        (ASP.NET Settings Schema)</a><br />
+                    <a href="http://msdn.microsoft.com/en-us/library/system.web.ui.page.enableeventvalidation.aspx">MSDN:
+                        Page.EnableEventValidation Property</a>
+                </p>
+                <div id="SCS0027"></div>
+
+                <h3 id="scs0027---open-redirect">SCS0027 - Open Redirect</h3>
+                <p>The dynamic value passed to the <code>Redirect</code> should be validated.</p>
+                <h4 id="risk-28">Risk</h4>
+                <p>Your site may be used in <a href="https://en.wikipedia.org/wiki/Phishing">phishing</a> attacks. An
+                    attacker may craft a trustworthy looking link to your site redirecting a victim to a similar looking
+                    malicious site:
+                    <code>https://www.yourdomain.com/loginpostback?redir=https://www.urdomain.com/login</code>
+                </p>
+                <h4 id="vulnerable-code-29">Vulnerable Code</h4>
+                <pre><code class="language-cs">[HttpPost]
+public ActionResult LogOn(LogOnModel model, string returnUrl)
+{
+    if (ModelState.IsValid)
+    {
+        if (MembershipService.ValidateUser(model.UserName, model.Password))
+        {
+            FormsService.SignIn(model.UserName, model.RememberMe);
+            if (!String.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+        else
+        {
+            ModelState.AddModelError("", "The user name or password provided is incorrect.");
+        }
+    }
+ 
+    // If we got this far, something failed, redisplay form
+    return View(model);
+}
+</code></pre>
+                <h4 id="solution-28">Solution</h4>
+                <pre><code class="language-cs">[HttpPost]
+public ActionResult LogOn(LogOnModel model, string returnUrl)
+{
+    if (ModelState.IsValid)
+    {
+        if (MembershipService.ValidateUser(model.UserName, model.Password))
+        {
+            FormsService.SignIn(model.UserName, model.RememberMe);
+            if (Url.IsLocalUrl(returnUrl)) // Make sure the url is relative, not absolute path
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+        else
+        {
+            ModelState.AddModelError("", "The user name or password provided is incorrect.");
+        }
+    }
+ 
+    // If we got this far, something failed, redisplay form
+    return View(model);
+}
+</code></pre>
+                <h4 id="references-30">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/601.html">CWE-601: URL Redirection to Untrusted Site
+                        (‘Open Redirect’)</a><br />
+                    <a
+                        href="https://docs.microsoft.com/en-us/aspnet/mvc/overview/security/preventing-open-redirection-attacks">Microsoft:
+                        Preventing Open Redirection Attacks (C#)</a><br />
+                    <a
+                        href="https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html">OWASP:
+                        Unvalidated Redirects and Forwards Cheat Sheet</a><br />
+                    <a href="https://www.hacksplaining.com/prevention/open-redirects">Hacksplaining: preventing
+                        malicious redirects</a>
+                </p>
+                <div id="SCS0028"></div>
+
+                <h3 id="scs0028---insecure-deserialization">SCS0028 - Insecure Deserialization</h3>
+                <p>Untrusted data passed for deserialization.</p>
+                <h4 id="risk-29">Risk</h4>
+                <p>Arbitrary code execution, full application compromise or denial of service. An attacker may pass
+                    specially crafted serialized .NET object of specific class that will execute malicious code during
+                    the construction of the object.</p>
+                <h4 id="vulnerable-code-30">Vulnerable Code</h4>
+                <pre><code class="language-cs">private void ConvertData(string json)
+{
+    var mySerializer = new JavaScriptSerializer(new SimpleTypeResolver());
+    Object mything = mySerializer.Deserialize(json, typeof(SomeDataClass)/* the type doesn't matter */);
+}
+</code></pre>
+                <h4 id="solution-29">Solution</h4>
+                <p>There is no simple fix. Do not deserialize untrusted data: user input, cookies or data that crosses
+                    trust boundaries.</p>
+
+                <p>In case it is unavoidable:<br /> 1) If serialization is done on the server side, then crosses trust
+                    boundary, but is not modified and is returned back (like cookie for example) - use signed
+                    cryptography (HMAC for instance) to ensure it
+                    wasn’t tampered.<br /> 2) Do not get the type to deserialize into from untrusted source: the
+                    serialized stream itself or other untrusted parameter. <code>BinaryFormatter</code> for example
+                    reads type information from serialized stream
+                    itself and can’t be used with untrusted streams:</p>
+                <pre><code class="language-cs">// DO NOT DO THIS!
+var thing = (MyType)new BinaryFormatter().Deserialize(untrustedStream);
+</code></pre>
+                <p>JavaScriptSerializer for instance without a JavaScriptTypeResolver is safe because it doesn’t resolve
+                    types at all:</p>
+                <pre><code class="language-cs">private void ConvertData(string json)
+{
+    var mySerializer = new JavaScriptSerializer(/* no resolver here */);
+    Object mything = mySerializer.Deserialize(json, typeof(SomeDataClass));
+}
+</code></pre>
+                <p>Pass the expected type (may be hardcoded) to the deserialization library. Some libraries like
+                    Json.Net, DataContractJsonSerializer and FSPickler validate expected object graph before
+                    deserialization. However the check is not bulletproof
+                    if the expected type contains field or property of <code>System.Object</code> type somewhere nested
+                    in hierarchy.</p>
+                <pre><code class="language-cs">// Json.net will inspect if the serialized data is the Expected type
+var data = JsonConvert.DeserializeObject&lt;Expected&gt;(json, new
+JsonSerializerSettings
+{
+    // Type information is not used, only simple types like int, string, double, etc. will be resolved
+    TypeNameHandling = TypeNameHandling.None
+});
+</code></pre>
+                <pre><code class="language-cs">// DO NOT DO THIS! The cast to MyType happens too late, when malicious code was already executed
+var thing = (MyType)new BinaryFormatter().Deserialize(untrustedStream);
+</code></pre>
+                <p>3) If the library supports implement a callback that verifies if the object and its properties are of
+                    expected type (don’t blacklist, use whitelist!):</p>
+                <pre><code class="language-cs">class LimitedBinder : SerializationBinder
+{
+    List&lt;Type&gt; allowedTypes = new List&lt;Type&gt;()
+    {
+        typeof(Exception),
+        typeof(List&lt;Exception&gt;),
+    };
+
+    public override Type BindToType(string assemblyName, string typeName)
+    {
+        var type = Type.GetType(String.Format("{0}, {1}", typeName, assemblyName), true);
+        foreach(Type allowedType in allowedTypes)
+        {
+            if(type == allowedType)
+                return allowedType;
+        }
+
+        // Don’t return null for unexpected types –
+        // this makes some serializers fall back to a default binder, allowing exploits.
+        throw new Exception("Unexpected serialized type");
+    }
+}
+
+var formatter = new BinaryFormatter() { Binder = new LimitedBinder () };
+var data = (List&lt;Exception&gt;)formatter.Deserialize (fs);
+</code></pre>
+                <p>Determining which types are safe is quite difficult, and this approach is not recommended unless
+                    necessary. There are many types that might allow non Remote Code Execution exploits if they are
+                    deserialized from untrusted data. Denial of
+                    service is especially common. As an example, the System.Collections.HashTable class is not safe to
+                    deserialize from an untrusted stream – the stream can specify the size of the internal “bucket”
+                    array and cause an out of memory condition.</p>
+
+                <p>4) Serialize simple <a href="https://en.wikipedia.org/wiki/Data_transfer_object">Data Transfer
+                        Objects (DTO)</a> only. Do not serialize/deserialize type information. For example, use only
+                    <code>TypeNameHandling.None</code> (the default)
+                    in Json.net:
+                </p>
+                <pre><code class="language-cs">class DataForStorage
+{
+    public string Id;
+    public int    Count;
+}
+
+var data = JsonConvert.SerializeObject&lt;DataForStorage&gt;(json, new
+JsonSerializerSettings
+{
+    TypeNameHandling = TypeNameHandling.None
+});
+</code></pre>
+                <p>will produce the following JSON without type information that is perfectly fine to deserialize back:
+                </p>
+                <pre><code class="language-json">{
+  "Id": null,
+  "Count": 0
+}
+</code></pre>
+                <h4 id="references-31">References</h4>
+                <p><a href="https://cwe.mitre.org/data/definitions/502.html">CWE-502: Deserialization of Untrusted
+                        Data</a><br />
+                    <a href="https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-Json-Attacks.pdf">BlackHat
+                        USA 2017: Friday the 13th: JSON Attacks</a><br />
+                    <a href="https://www.slideshare.net/MSbluehat/dangerous-contents-securing-net-deserialization">BlueHat
+                        v17: Dangerous Contents - Securing .Net Deserialization</a><br />
+                    <a href="https://owasp.org/www-community/vulnerabilities/Deserialization_of_untrusted_data">OWASP:
+                        Deserialization
+                        of untrusted data</a><br />
+                    <a href="https://github.com/pwntester/ysoserial.net">Deserialization payload generator for a variety
+                        of .NET formatters</a><br />
+                    <a href="https://github.com/pwntester/dotnet-deserialization-scanner">.NET Deserialization Passive
+                        Scanner</a>
+                </p>
+
+                <h1 id="release-notes">Release Notes</h1>
+
+                <h2 id="563">5.6.3</h2>
+                <ul>
+                    <li><a href="https://github.com/security-code-scan/security-code-scan/pull/248">#248</a> Be able to
+                        exit with non-zero error code when warnings are found</li>
+                </ul>
+
+                <h2 id="562">5.6.2</h2>
+                <ul>
+                    <li>Blue-yellow edition in support of Ukraine.</li>
+                </ul>
+
+                <h2 id="561">5.6.1</h2>
+                <ul>
+                    <li>Fixed #239 “Adding custom sanitizers to a config file in stand-alone runner”.</li>
+                </ul>
+
+                <h2 id="560">5.6.0</h2>
+                <ul>
+                    <li>Added support for .NET 6.0 and VS2022</li>
+                </ul>
+
+                <h2 id="521">5.2.1</h2>
+                <ul>
+                    <li>New parameter <code>--ignore-msbuild-errors</code> for standalone runner to ignore errors from
+                        incompatible projects.</li>
+                    <li>Bug fixes and improvements.</li>
+                </ul>
+
+                <h2 id="510">5.1.0</h2>
+                <ul>
+                    <li>Standalone runner improved. My favorite way to run SCS!</li>
+                    <li>Bug fixes and improvements.</li>
+                    <li>A <a href="https://github.com/SPoint42/SecurityTools/tree/main/SCDotNet2DefectDojo">script</a>
+                        was made by <a href="https://github.com/SPoint42">Sebastien gioria</a> for importing the
+                        analysis results into <a href="https://github.com/DefectDojo/django-DefectDojo">DefectDojo</a>.
+                    </li>
+                </ul>
+
+                <h2 id="500">5.0.0</h2>
+                <ul>
+                    <li>New inter-procedural taint analysis engine.</li>
+                    <li>New sinks and sources.</li>
+                    <li>Bug fixes.</li>
+                    <li>Standalone tool.</li>
+                </ul>
+
+                <h2 id="353">3.5.3</h2>
+                <ul>
+                    <li>Removed EntityFramework “Interpolated” sinks that caused false positives.</li>
+                    <li>Added configuration entry for Web Config analyzer to allow filtering file names.</li>
+                </ul>
+
+                <h2 id="352">3.5.2</h2>
+                <p>Bugfix release.</p>
+                <ul>
+                    <li>Fix MissingMethodException “Method not found: ‘YamlDotNet.Serialization.IDeserializer
+                        YamlDotNet.Serialization.DeserializerBuilder.Build()’” if incompatible version of YamlDotNet is
+                        loaded by the process.</li>
+                </ul>
+
+                <h2 id="350">3.5.0</h2>
+                <ul>
+                    <li>Better taint analysis in implicit string conversions case.</li>
+                    <li>Out of range exception fix.</li>
+                    <li>New SQL injection and Path Traversal sinks.</li>
+                </ul>
+
+                <p>Thanks <a href="https://github.com/watfordgnf">@watfordgnf</a> and <a
+                        href="https://github.com/indy-singh">@indy-singh</a> for the contributions!</p>
+
+                <h2 id="340">3.4.0</h2>
+                <ul>
+                    <li>XSS analyzer was rewritten. Additional sanitizers were added.</li>
+                    <li>Added <a
+                            href="https://github.com/security-code-scan/security-code-scan/commit/792c265cd218ea7abb8433d52ca159eb90ab91ae#diff-34b8f54577569f3aae468b7f58cc5d02">ReportAnalysisCompletion</a>
+                        option to output a message that the analysis
+                        did run.</li>
+                    <li>Bugfixes and improvements.</li>
+                </ul>
+
+                <h2 id="330">3.3.0</h2>
+                <ul>
+                    <li>Better C# 7 handling</li>
+                    <li>CSRF analyzer configuration made more flexible.<br /> Configuration file schema version has
+                        changed to 2.0, so if you had custom config settings, you’ll need to adjust to the schema and
+                        bump your file name from config-2.0.yml to config-2.1.yml
+                        or change from Version: 2.0 to Version: 2.1 if it was added to a project.</li>
+                    <li>Bug fixes.</li>
+                </ul>
+
+                <p>Thanks <a href="https://github.com/kevin-montrose">@kevin-montrose</a> for the contributions!</p>
+
+                <h2 id="320">3.2.0</h2>
+                <p>Bugfix release.</p>
+                <ul>
+                    <li>Fixes using SCS as nuget. <a
+                            href="https://github.com/security-code-scan/security-code-scan/issues/117">#117</a></li>
+                    <li>One click code fixes were removed until a separate assembly is created. <a
+                            href="https://github.com/security-code-scan/security-code-scan/issues/71">#71</a></li>
+                </ul>
+
+                <h2 id="310">3.1.0</h2>
+                <p>The release adds support for VS2019 and bug fixes. Also:</p>
+                <ul>
+                    <li>Adds multiple XSS sinks for WebForms (thanks <a href="https://github.com/zaichenko">Andrei!</a>)
+                    </li>
+                    <li>Changes in SCS configuration file doesn’t require to restart Visual Studio anymore.</li>
+                    <li>Warnings are suppressed for generated code.</li>
+                    <li>Adds .NET Core cookie analyzer.</li>
+                </ul>
+
+                <h2 id="300">3.0.0</h2>
+                <p>This is a major release that introduces configurable taint sources, sanitizers and validators.
+                    Configuration file schema version has changed to 2.0, so if you had custom config settings, you’ll
+                    need to adjust to the schema and bump your
+                    file name from <code>config-1.0.yml</code> to <code>config-2.0.yml</code> or change from
+                    <code>Version: 1.0</code> to <code>Version: 2.0</code> if it was added to a project.<br /> With the
+                    introduction of taint sources and taint entry
+                    points warning are shown only for the tainted data. Unknowns are reported only in the Audit
+                    Mode.<br /> Multiple improvements and fixes were done to Taint, Anti-CSRF token, XSS, SQL injection,
+                    Path traversal, XPath injection, Certificate
+                    validation analyzers.<br /> New LDAP injection detection was added.<br /> An issue was fixed that
+                    could surface as
+                    <code>Session Terminated unexpectedly. Disabling 'Security Code Scan' might help prevent...</code>.
+                </p>
+
+                <p>I would like to thank all <a
+                        href="https://github.com/security-code-scan/security-code-scan/graphs/contributors">contributors</a>
+                    to this and previous releases. Also to everyone who has reported <a
+                        href="https://github.com/security-code-scan/security-code-scan/issues?utf8=%E2%9C%93&amp;q=is%3Aissue">issues
+                        or feature requests</a>.</p>
+
+                <h2 id="280">2.8.0</h2>
+                <p><strong>Important:</strong> This release targets full .NET framework and <strong>may</strong> not run
+                    on Unix machines. Although as tested it runs fine in <a
+                        href="https://hub.docker.com/r/microsoft/dotnet/">microsoft/dotnet 2.1 docker container</a> on
+                    Linux, still for Unix based Continuous Integration builds it is better to use <a
+                        href="https://www.nuget.org/packages/SecurityCodeScan.VS2017">SecurityCodeScan.VS2017 NuGet
+                        package</a>, that targets netstandard.</p>
+
+                <p>Added external configuration files: per user account and per project. It allows you to customize
+                    settings from <a
+                        href="https://github.com/security-code-scan/security-code-scan/blob/master/SecurityCodeScan/Config/Main.yml">built-in
+                        configuration</a> or add your specific Sinks and Behaviors.</p>
+                <blockquote>
+                    <p>⚠️Note: Configuration schema has changed in version 3.0.0 please refer to the documentation above
+                        for examples.</p>
+                </blockquote>
+
+                <p>Audit Mode setting (Off by default) was introduced for those interested in warnings with more false
+                    positives.</p>
+
+                <h2 id="271">2.7.1</h2>
+                <p>Couple of issues related to VB.NET fixed:</p>
+                <ul>
+                    <li>VB.NET projects were not analyzed when using the analyzer from NuGet.</li>
+                    <li>‘Could not load file or assembly ‘Microsoft.CodeAnalysis.VisualBasic, Version=1.0.0.0…’ when
+                        building C# .NET Core projects from command line with dotnet.exe</li>
+                </ul>
+
+                <h2 id="270">2.7.0</h2>
+                <p><a href="#SCS0028">Insecure deserialization analyzers</a> for multiple libraries and formatters:</p>
+                <ul>
+                    <li><a href="https://www.newtonsoft.com/json">Json.NET</a></li>
+                    <li><a
+                            href="https://msdn.microsoft.com/en-us/library/system.runtime.serialization.formatters.binary.binaryformatter(v=vs.110).aspx">BinaryFormatter</a>
+                    </li>
+                    <li><a href="https://github.com/mgholam/fastJSON">FastJSON</a></li>
+                    <li><a
+                            href="https://msdn.microsoft.com/en-us/library/system.web.script.serialization.javascriptserializer(v=vs.110).aspx">JavaScriptSerializer</a>
+                    </li>
+                    <li><a
+                            href="https://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer(v=vs.110).aspx">DataContractJsonSerializer</a>
+                    </li>
+                    <li><a
+                            href="https://msdn.microsoft.com/en-us/library/system.runtime.serialization.netdatacontractserializer(v=vs.110).aspx">NetDataContractSerializer</a>
+                    </li>
+                    <li><a
+                            href="https://msdn.microsoft.com/en-us/library/system.xml.serialization.xmlserializer(v=vs.110).aspx">XmlSerializer</a>
+                    </li>
+                    <li>and many more…</li>
+                </ul>
+
+                <p>Added warning for the usage of AllowHtml attribute.<br /> Different input validation analyzer and
+                    CSRF analyzer improvements.</p>
+
+                <h2 id="261">2.6.1</h2>
+                <p>Exceptions analyzing VB.NET projects fixed.</p>
+
+                <h2 id="260">2.6.0</h2>
+                <p>XXE analysis expanded. More patterns to detect Open Redirect and Path Traversal. Weak hash analyzer
+                    fixes. Added request validation aspx analyzer. False positives reduced in hardcoded password
+                    manager.</p>
+
+                <p>Web.config analysis:</p>
+                <ul>
+                    <li>The feature was broken. <a href="#AnalyzingConfigFiles">See how to enable.</a></li>
+                    <li>Added detection of request validation mode.</li>
+                    <li>Diagnostic messages improved.</li>
+                </ul>
+
+                <p>Taint improvements:</p>
+                <ul>
+                    <li>Area expanded.</li>
+                    <li>Taint diagnostic messages include which passed parameter is untrusted.</li>
+                </ul>
+
+                <h2 id="250">2.5.0</h2>
+                <p>Various improvements were made to taint analysis. The analysis was extended from local variables into
+                    member variables. False positive fixes in:</p>
+                <ul>
+                    <li>XSS analyzer.</li>
+                    <li>Weak hash analyzer. Added more patterns.</li>
+                    <li>Path traversal. Also added more patterns.</li>
+                </ul>
+
+                <p>New features:</p>
+                <ul>
+                    <li>Open redirect detection.</li>
+                </ul>
+
+
+
+            </div>
+        </div>
+    </article>
+
+    <footer>
+        <div class="wrap">
+            <span class="mega-octicon octicon-mark-github"></span>
+        </div>
+    </footer>
+
+</body>
+
+</html>

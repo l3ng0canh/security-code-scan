@@ -1,0 +1,583 @@
+{% autoescape false %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Sarif Viewer</title>
+
+  <!-- CSS only -->
+  <link href={{ url_for('static', filename="css/style.css" ) }} rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href={{ url_for('static', filename="assets/img/logo.ico" ) }}>
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" data-name="vs/editor/editor.main"
+    href="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0-dev.20220630/min/vs/editor/editor.main.css">
+
+  <!-- Load Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0-dev.20220630/min/vs/loader.js"
+    integrity="sha512-pcXRQ1T1ILMu4Lk2P+6vVKRA3K00z1kQ3Uq44rROjztTopmCzQUnkA/SKznYEh5m4K+Ds2Y8Gv1iO9qU9grVCg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
+  <link rel="stylesheet" href={{ url_for('static', filename="assets/fonts/font-awesome.min.css" ) }}>
+  <link rel="stylesheet" href={{ url_for('static', filename="assets/css/Contact-Form-Clean.css" ) }}>
+  <link rel="stylesheet" href={{ url_for('static', filename="assets/css/Features-Boxed.css" ) }}>
+  <link rel="stylesheet" href={{ url_for('static', filename="assets/css/Footer-Clean.css" ) }}>
+  <link rel="stylesheet" href={{ url_for('static', filename="assets/css/styles.css" ) }}>
+
+  <script type="text/javascript">
+
+    var content = `{{content}}`;
+    var language = `{{language}}`;
+
+    require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.34.0-dev.20220630/min/vs/' } });
+
+    let editor;
+    require(["vs/editor/editor.main"], () => {
+      monaco.editor.defineTheme('myCustomTheme', {
+        "base": "vs",
+        "inherit": true,
+        "rules": [
+          {
+            "background": "FFFFFF",
+            "token": ""
+          },
+          {
+            "foreground": "00b418",
+            "token": "comment"
+          },
+          {
+            "foreground": "0206ff",
+            "fontStyle": "italic",
+            "token": "variable"
+          },
+          {
+            "foreground": "0100b6",
+            "fontStyle": "bold",
+            "token": "keyword"
+          },
+          {
+            "foreground": "cd0000",
+            "fontStyle": "italic",
+            "token": "constant.numeric"
+          },
+          {
+            "foreground": "c5060b",
+            "fontStyle": "italic",
+            "token": "constant"
+          },
+          {
+            "foreground": "585cf6",
+            "fontStyle": "italic",
+            "token": "constant.language"
+          },
+          {
+            "foreground": "d80800",
+            "token": "string"
+          },
+          {
+            "foreground": "26b31a",
+            "token": "constant.character.escape"
+          },
+          {
+            "foreground": "26b31a",
+            "token": "string source"
+          },
+          {
+            "foreground": "1a921c",
+            "token": "meta.preprocessor"
+          },
+          {
+            "foreground": "0c450d",
+            "fontStyle": "bold",
+            "token": "keyword.control.import"
+          },
+          {
+            "foreground": "0000a2",
+            "fontStyle": "bold",
+            "token": "entity.name.function"
+          },
+          {
+            "foreground": "0000a2",
+            "fontStyle": "bold",
+            "token": "keyword.other.name-of-parameter.objc"
+          },
+          {
+            "fontStyle": "italic",
+            "token": "entity.name.type"
+          },
+          {
+            "fontStyle": "italic",
+            "token": "entity.other.inherited-class"
+          },
+          {
+            "fontStyle": "italic",
+            "token": "variable.parameter"
+          },
+          {
+            "foreground": "70727e",
+            "token": "storage.type.method"
+          },
+          {
+            "fontStyle": "italic",
+            "token": "meta.section entity.name.section"
+          },
+          {
+            "fontStyle": "italic",
+            "token": "declaration.section entity.name.section"
+          },
+          {
+            "foreground": "3c4c72",
+            "fontStyle": "bold",
+            "token": "support.function"
+          },
+          {
+            "foreground": "6d79de",
+            "fontStyle": "bold",
+            "token": "support.class"
+          },
+          {
+            "foreground": "6d79de",
+            "fontStyle": "bold",
+            "token": "support.type"
+          },
+          {
+            "foreground": "06960e",
+            "fontStyle": "bold",
+            "token": "support.constant"
+          },
+          {
+            "foreground": "21439c",
+            "fontStyle": "bold",
+            "token": "support.variable"
+          },
+          {
+            "foreground": "687687",
+            "token": "keyword.operator.js"
+          },
+          {
+            "foreground": "ffffff",
+            "background": "990000",
+            "token": "invalid"
+          },
+          {
+            "background": "ffd0d0",
+            "token": "invalid.deprecated.trailing-whitespace"
+          },
+          {
+            "background": "427ff530",
+            "token": "text source"
+          },
+          {
+            "background": "427ff530",
+            "token": "string.unquoted"
+          },
+          {
+            "foreground": "68685b",
+            "token": "meta.xml-processing"
+          },
+          {
+            "foreground": "68685b",
+            "token": "declaration.xml-processing"
+          },
+          {
+            "foreground": "888888",
+            "token": "meta.doctype"
+          },
+          {
+            "foreground": "888888",
+            "token": "declaration.doctype"
+          },
+          {
+            "fontStyle": "italic",
+            "token": "meta.doctype.DTD"
+          },
+          {
+            "fontStyle": "italic",
+            "token": "declaration.doctype.DTD"
+          },
+          {
+            "foreground": "1c02ff",
+            "token": "meta.tag"
+          },
+          {
+            "foreground": "1c02ff",
+            "token": "declaration.tag"
+          },
+          {
+            "fontStyle": "bold",
+            "token": "entity.name.tag"
+          },
+          {
+            "fontStyle": "italic",
+            "token": "entity.other.attribute-name"
+          },
+          {
+            "foreground": "0c07ff",
+            "fontStyle": "bold",
+            "token": "markup.heading"
+          },
+          {
+            "foreground": "000000",
+            "fontStyle": "italic",
+            "token": "markup.quote"
+          },
+          {
+            "foreground": "b90690",
+            "token": "markup.list"
+          }
+        ],
+        "colors": {
+          "editor.foreground": "#000000",
+          "editor.background": "#FFFFFF",
+          "editor.selectionBackground": "#C3DCFF",
+          "editor.lineHighlightBackground": "#00000012",
+          "editorCursor.foreground": "#000000",
+          "editorWhitespace.foreground": "#BFBFBF"
+        }
+      });
+
+
+      editor = monaco.editor.create(document.getElementById('editor'), {
+        value: content,
+        readOnly: true,
+        language: language,
+        theme: 'myCustomTheme',
+      });
+
+    });
+
+    function getVulGroupByLocationData(location, index) {
+      const datauri = '/getVulGroupByLocationData';
+      sender = JSON.stringify([location, index]);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          // Typical action to be performed when the document is ready:
+          var obj = JSON.parse(xhttp.responseText)
+          content = obj.content;
+          language = obj.language;
+          const model = monaco.editor.createModel(
+            content,
+            language
+          )
+
+          document.getElementById("msg").innerHTML = obj.grLocation.message.text;
+          document.getElementById("ruleid").innerHTML = obj.grLocation.ruleId;
+          document.getElementById("level").innerHTML = obj.grLocation.level;
+          document.getElementById("lct").innerHTML = obj.grLocation.locations[0].physicalLocation.artifactLocation.uri.split("///")[1];
+          document.getElementById("WarningLevel").innerHTML = obj.grLocation.properties.warningLevel;
+
+
+          var startLine = parseInt(obj.grLocation.locations[0].physicalLocation.region.startLine);
+          var startColumn = parseInt(obj.grLocation.locations[0].physicalLocation.region.startColumn);
+          var endLine = parseInt(obj.grLocation.locations[0].physicalLocation.region.endLine);
+          var endColumn = parseInt(obj.grLocation.locations[0].physicalLocation.region.endColumn);
+
+
+          editor.setModel(model)
+          editor.deltaDecorations(
+            [],
+            [
+              {
+                range: new monaco.Range(startLine, startColumn, endLine, endColumn),
+                options: { inlineClassName: 'myLineDecoration' }
+              },
+              {
+                range: new monaco.Range(startLine, parseInt(model.getLineFirstNonWhitespaceColumn(startLine)), endLine, parseInt(model.getLineMaxColumn(endLine))),
+                options: { inlineClassName: 'myInlineDecoration' }
+              }
+            ]
+
+          );
+
+        }
+      };
+      xhttp.open("POST", datauri);
+      xhttp.send(sender);
+    }
+
+
+    function getVulGroupByRuleData(ruleId, index) {
+      const datauri = '/getVulGroupByRuleData';
+      sender = JSON.stringify([ruleId, index]);
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          // Typical action to be performed when the document is ready:
+          var obj = JSON.parse(xhttp.responseText)
+          content = obj.content;
+          language = obj.language;
+          const model = monaco.editor.createModel(
+            content,
+            language
+          )
+          document.getElementById("msg").innerHTML = obj.grRule.message.text;
+          document.getElementById("ruleid").innerHTML = obj.grRule.ruleId;
+          document.getElementById("level").innerHTML = obj.grRule.level;
+          document.getElementById("lct").innerHTML = obj.grRule.locations[0].physicalLocation.artifactLocation.uri.split("///")[1];
+          document.getElementById("WarningLevel").innerHTML = obj.grRule.properties.warningLevel;
+
+
+          var startLine = parseInt(obj.grRule.locations[0].physicalLocation.region.startLine);
+          var startColumn = parseInt(obj.grRule.locations[0].physicalLocation.region.startColumn);
+          var endLine = parseInt(obj.grRule.locations[0].physicalLocation.region.endLine);
+          var endColumn = parseInt(obj.grRule.locations[0].physicalLocation.region.endColumn);
+
+
+          editor.setModel(model)
+          editor.deltaDecorations(
+            [],
+            [
+              {
+                range: new monaco.Range(startLine, startColumn, endLine, endColumn),
+                options: { inlineClassName: 'myLineDecoration' }
+              },
+              {
+                range: new monaco.Range(startLine, parseInt(model.getLineFirstNonWhitespaceColumn(startLine)), endLine, parseInt(model.getLineMaxColumn(endLine))),
+                options: { inlineClassName: 'myInlineDecoration' }
+              }
+            ]
+
+          );
+        }
+      };
+      xhttp.open("POST", datauri);
+      xhttp.send(sender);
+    }
+
+
+  </script>
+</head>
+
+<body>
+  <header style="font-family: ABeeZee, sans-serif;">
+    <div class="container">
+      <nav class="navbar navbar-light navbar-expand-md">
+        <div class="container-fluid"><button data-bs-toggle="collapse" class="navbar-toggler"
+            data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span
+              class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navcol-1"><img src={{ url_for('static',
+              filename="assets/img/logo.png" ) }} class="logo" style="max-width: 195px;">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item"><a class="nav-link active" href="/"
+                  style="font-family: ABeeZee, sans-serif;">Home</a></li>
+              <li class="nav-item"><a class="nav-link" href="/info" style="font-family: ABeeZee, sans-serif;">Tool
+                  Information</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  <div class=" relative flex h-screen flex-row bg-white ">
+
+    <!-- editor screen -->
+    <div class=" bg-white w-7/12 " id="editor">
+    </div>
+
+
+    <!-- vul info screen -->
+    <div class=" bg-white w-5/12  flex flex-col  h-screen grid grid-cols-1 divide-y-4
+    divide-black-500 text-left">
+      <div class=" h-1/2 bg-white  overflow-y-auto">
+        <div class="tab ">
+          <span
+            class="tablinks text-lg font-semibold inline-block py-1 px-2 uppercase rounded text-pink-600 bg-pink-200 uppercase last:mr-0 mr-1 "
+            onclick="openTab(event, 'Locations')">
+            Locations
+          </span>
+          <span
+            class="tablinks text-lg font-semibold inline-block py-1 px-2 uppercase rounded  uppercase last:mr-0 mr-1 hover:text-pink-600 hover:bg-pink-200"
+            onclick="openTab(event, 'Rules')">
+            Rules
+          </span>
+          <span
+          class="tablinks text-lg font-semibold inline-block py-1 px-2 uppercase rounded  uppercase last:mr-0 mr-1 hover:text-pink-600 hover:bg-pink-200">
+          VulNumber &nbsp; <span class=" rounded-full bg-gray-300 text-red-500 h-10 w-10 items-center justify-center  ">
+           {{VulNumber}}</span>
+        </span>
+
+        </div>
+        {%for i in range(0, len)%}
+        {% set vulLeng = (VulGroupByLocation.get(filename[i]) | length) %}
+        <div id="Locations" class="block tabcontent">
+          <div class="container mx-auto mt-8">
+            <div class="max-w-2xl" class="p-6 mx-auto bg-white">
+              <div class="mb-4">
+                <div class="mb-4">
+                  <div data-bs-toggle="collapse" data-bs-target='#id{{i}}'
+                    class="flex items-left justify-left w-full py-1 pl-1 pr-1 font-bold text-indigo-100 bg-indigo-500 rounded cursor-pointer ">
+                    <span class="flex items-center justify-center w-6 h-6">
+                      <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"></path>
+                      </svg>
+                    </span>
+                    &emsp; {{filename[i]}} &nbsp; <span
+                      class="flex items-center justify-center w-5 h-5 bg-gray-300 text-red-500 rounded-full">
+                      {{vulLeng}}</span>
+                  </div>
+                  <div id='id{{i}}' class="relative overflow-x-auto shadow-md sm:rounded-lg collapse">
+                    <table class=" flex-row table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" class="px-6 py-3"> Line
+
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Rule Name
+                          </th>
+                        </tr>
+                      </thead>
+                      {%for j in range(0, vulLeng)%}
+                      <tbody>
+                        <tr
+                          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                          onclick="getVulGroupByLocationData('{{filename[i]}}','{{j}}')">
+                          <td scope="row"
+                            class="cursor-pointer px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            {{VulGroupByLocation.get(filename[i])[j].get("locations")[0].get("physicalLocation").get("region").get("startLine")}}
+                          </td>
+                          <td
+                            class="cursor-pointer px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            {% set ruleid =
+                            VulGroupByLocation.get(filename[i])[j].get("ruleId")
+                            %}
+                            {{mapRuleIdRuleName.get(ruleid)}}
+                          </td>
+                        </tr>
+                      </tbody>
+                      {%endfor%}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {%endfor%}
+
+        {%for i in range(0, lenListRule)%}
+        {% set vulLengOfid = (VulGroupByRule.get(ListRule[i]) | length) %}
+        <div id="Rules" class="hidden tabcontent">
+          <div class="container mx-auto mt-8">
+            <div class="max-w-2xl" class="p-6 mx-auto bg-white">
+              <div class="mb-4">
+                <div class="mb-4">
+                  <div data-bs-toggle="collapse" data-bs-target='#id{{i}}'
+                    class="flex items-center text-left justify-left w-full py-1 pl-1 pr-1 font-bold text-indigo-100 bg-indigo-500 rounded cursor-pointer ">
+                    <span class="flex items-center justify-center w-6 h-6">
+                      <svg data-accordion-icon class="w-6 h-6 shrink-0" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"></path>
+                      </svg>
+                    </span>
+                    &emsp; {{ListRule[i]}} &nbsp; &#821; &nbsp;{{mapRuleIdRuleName.get(ListRule[i])}} &nbsp;
+                    <span class="flex items-center justify-center w-5 h-5 bg-gray-300 text-red-500 rounded-full">
+                      {{vulLengOfid}}</span>
+                  </div>
+                  <div id='id{{i}}' class="relative overflow-x-auto shadow-md sm:rounded-lg collapse">
+                    <table class=" flex-row table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                      <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                        <tr>
+                          <th scope="col" class="px-6 py-3"> Line
+                          </th>
+                          <th scope="col" class="px-6 py-3">
+                            Location
+                          </th>
+                        </tr>
+                      </thead>
+                      {%for j in range(0, vulLengOfid)%}
+                      <tbody>
+                        <tr
+                          class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                          onclick="getVulGroupByRuleData('{{ListRule[i]}}','{{j}}')">
+                          <td scope="row"
+                            class="cursor-pointer px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            {{VulGroupByRule.get(ListRule[i])[j].get("locations")[0].get("physicalLocation").get("region").get("startLine")}}
+                          </td>
+                          <td
+                            class="cursor-pointer px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                            {% set location =
+                            VulGroupByRule.get(ListRule[i])[j].get("locations")[0].get("physicalLocation").get("artifactLocation").get("uri").split('///')[1]
+                            %}
+                            {{location}}
+                          </td>
+                        </tr>
+                      </tbody>
+                      {%endfor%}
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {%endfor%}
+
+        <script>
+          function openTab(evt, tabname) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+              tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+              tablinks[i].className = tablinks[i].className.replace(" text-pink-600 bg-pink-200", "hover:text-pink-600 hover:bg-pink-200");
+            }
+            var listtab = document.querySelectorAll("#" + tabname);
+            for (i = 0; i < listtab.length; i++) {
+              listtab[i].style.display = "block";
+            }
+            evt.currentTarget.className += " text-pink-600 bg-pink-200";
+          }
+        </script>
+
+      </div>
+
+      <div class=" h-1/2 bg-white overflow-y-auto  bottom-0   ">
+        <span
+          class="text-lg font-semibold inline-block py-1 px-2 uppercase rounded text-pink-600 bg-pink-200 uppercase last:mr-0 mr-1" >
+          INFO
+        </span>
+        <br><br>
+        <span class="text-red-700" id="msg"></span>
+        <br><br>
+        <table class=" flex-row table-auto w-full text-sm text-left  dark:text-gray-400">
+          <tbody>
+            <tr>
+              <th class="px-6 py-3 text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">Rule Id</th>
+              <td id="ruleid" class="text-indigo-600"></td>
+            </tr>
+            <tr>
+              <th class=" px-6 py-3 text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">Level</th>
+              <td id="level" class="text-red-700"></td>
+            </tr>
+            <tr>
+              <th class="px-6 py-3 text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">Locations</th>
+              <td id="lct" class="text-indigo-600 underline"></td>
+            </tr>
+            <tr>
+              <th class=" px-6 py-3 text-xs text-gray-700  bg-gray-50 dark:bg-gray-700 dark:text-gray-400">WarningLevel
+              </th>
+              <td id="WarningLevel" class="text-red-700"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</body>
+
+</html>
+{% endautoescape %}

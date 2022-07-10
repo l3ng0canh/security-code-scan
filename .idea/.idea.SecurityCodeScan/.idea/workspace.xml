@@ -8,9 +8,6 @@
   <component name="ChangeListManager">
     <list default="true" id="3473d60e-12e3-4593-9346-11546d0dfecb" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/Taint/TaintAnalyzer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Analyzers/Taint/TaintAnalyzer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Config/Messages.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Config/Messages.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,6 +93,9 @@
       <workItem from="1656386231293" duration="1848000" />
       <workItem from="1656433657313" duration="1306000" />
       <workItem from="1656476339593" duration="6169000" />
+      <workItem from="1656521620554" duration="1288000" />
+      <workItem from="1657100778692" duration="163000" />
+      <workItem from="1657361087038" duration="2000" />
     </task>
     <servers />
   </component>

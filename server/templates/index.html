@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Security Code Scan | static code analyzer for .NET </title>
+    
+    <link rel="icon" type="image/x-icon" href={{ url_for('static', filename="assets/img/logo.ico" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/bootstrap/css/bootstrap.min.css" ) }}>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=ABeeZee&amp;display=swap">
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/fonts/font-awesome.min.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/css/Contact-Form-Clean.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/css/Features-Boxed.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/css/Footer-Clean.css" ) }}>
+    <link rel="stylesheet" href={{ url_for('static', filename="assets/css/styles.css" ) }}>
+
+
+</head>
+
+<body style="font-family: ABeeZee, sans-serif;">
+    <header>
+        <div class="container">
+            <nav class="navbar navbar-light navbar-expand-md">
+                <div class="container-fluid"><button data-bs-toggle="collapse" class="navbar-toggler"
+                        data-bs-target="#navcol-1"><span class="visually-hidden">Toggle navigation</span><span
+                            class="navbar-toggler-icon"></span></button>
+                    <div class="collapse navbar-collapse" id="navcol-1"><img src={{ url_for('static',
+                            filename="assets/img/logo.png" ) }} class="logo" style="max-width: 195px;">
+                        <ul class="navbar-nav ms-auto">
+                            <li class="nav-item"><a class="nav-link active" href="#"
+                                    style="font-family: ABeeZee, sans-serif;">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/info"
+                                    style="font-family: ABeeZee, sans-serif;">Tool Information</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="container-fluid text-center py-5" id="analyze" style="background: #fafafa;"><br><br>
+        <h1 class="display-5 text-center fw-bold">Security Code Scan - static code analyzer for .NET</h1>
+        <p class="col-md-8 fs-4" style="margin: auto;">This tool allow you to detects various security vulnerability
+            patterns: SQL Injection, Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), XML eXternal Entity
+            Injection (XXE), etc..</p><br><br>
+
+
+
+        <form method="POST" action="/analyze">
+            <div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-4" style="min-width: 300px;">
+                        <input class="form-control" type="url" name="solutionPath" placeholder="Path to solution"
+                            style="display: inline;font-size: 21px;background: rgba(255,255,255,0);max-width: 80%;width: 100%;border-radius: 9px;border-color: rgb(181,181,181);">
+
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-4" style="min-width: 300px;">
+                        <input class="form-control" name="SARIFPath" placeholder="Path to SARIF file output"
+                            style="display: inline;font-size: 21px;background: rgba(255,255,255,0);max-width: 80%;width: 100%;border-radius: 9px;border-color: rgb(181,181,181);">
+                    </div>
+                    <div class="col"></div>
+                </div>
+                <div class="row">
+                    <div class="col"></div>
+                    <div class="col-4" style="min-width: 300px;">
+                        <div class="input-area mt-4">
+                            <select class="form-control" name="dotnetversion" id="dotnetversion"
+                                style="display: inline;font-size: 21px;background: rgba(255,255,255,0);max-width: 80%;width: 100%;border-radius: 9px;border-color: rgb(181,181,181);">
+                                <option value="0">Select dotnet version</option>
+                                <option value="1">Dotnet core 5.0</option>
+                                <option value="2">Dotnet core 6.0</option>
+                                <option value="3">Dotnet framework 4.x</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col"></div>
+                </div>
+            </div>
+            <br>
+            <button class="btn btn-dark" type="submit" style="border-radius: 6px;margin-left: 8px;">Analyze</button>
+        </form><br><br>
+
+    </div>
+
+    <section id="features" style="background: rgba(238,244,247,0);">
+        <div class="container">
+            <div class="container-fluid text-center py-5">
+                <h2 class="text-center">Features </h2>
+                <p class="text-center">Safif Viewer</p>
+                <form method="GET" action="/result">
+                    <div>
+                        <div class="row">
+                            <div class="col"></div>
+                            <div class="col-4" style="min-width: 700px;">
+                                <input class="form-control" type="url" name="sarifPath"
+                                    placeholder="Path to Sarif File generated by Security CodeScan"
+                                    style="display: inline;font-size: 21px;background: rgba(255,255,255,0);max-width: 80%;width: 100%;border-radius: 9px;border-color: rgb(181,181,181);">
+
+                            </div>
+                            <div class="col"></div>
+                        </div>
+                    </div>
+                    <br><br>
+                    <button class="btn btn-dark" type="submit"
+                        style="border-radius: 6px;margin-left: 8px;">View</button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+    <footer class="footer-clean">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-sm-4 col-md-3 item">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="#analyze">Analyze .NET project</a></li>
+                        <li><a href="#features">Sarif Viewer</a></li>
+                        <li></li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 col-md-3 item">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#analyze">Analyze</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="/info">How it works</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 item social">
+                    <p class="copyright">Security Code Scan<br>static code analyzer for .NET</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    </div>
+    <script src={{ url_for('static', filename="assets/js/jquery.min.js" ) }}></script>
+    <script src={{ url_for('static', filename="assets/bootstrap/js/bootstrap.min.js" ) }}></script>
+</body>
+
+</html>

@@ -144,10 +144,13 @@ def data_get_location():
 def result():
 
     sarifPath = request.args.get("sarifPath")
-    f = open(sarifPath, "r")
-
-    sarif_data = loader.load_sarif_file(sarifPath)
-
+    
+    try:
+        f = open(sarifPath, "r")
+        sarif_data = loader.load_sarif_file(sarifPath)
+    except Exception as e:
+        return render_template("error.html", error = e)
+        
     Location = set()
     Rule = set()
 

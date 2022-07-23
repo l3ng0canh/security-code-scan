@@ -7,9 +7,9 @@ from sarif import loader
 app = Flask(__name__)
 app.secret_key = "S3cr3t_K3y_0f_S3rv3r"
 
-dotnet5 = r"..\SecurityCodeScan.Tool\.NET Core\bin\Release\net5.0\security-scan.exe"
-dotnet6 = r"..\SecurityCodeScan.Tool\.NET Core\bin\Release\net6.0\security-scan.exe"
-dotnetFrameWork4x = r"..\SecurityCodeScan.Tool\.NET 4.x\bin\Release\net48\security-scan.exe"
+dotnet5 = r"..\SecurityCodeScan.Tool\.NET Core\bin\Debug\net5.0\security-scan.exe"
+dotnet6 = r"..\SecurityCodeScan.Tool\.NET Core\bin\Debug\net6.0\security-scan.exe"
+dotnetFrameWork4x = r"..\SecurityCodeScan.Tool\.NET 4.x\bin\Debug\net48\security-scan.exe"
 
 VulGroupByRule = {}
 VulGroupByLocation = {}

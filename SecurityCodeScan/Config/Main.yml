@@ -1532,7 +1532,7 @@ Sinks:
 #      Arguments:
 #        - model
 
-
+#SSTI
   - Type: RazorEngine.Razor
     TaintTypes:
       - SCS0036
@@ -1542,7 +1542,7 @@ Sinks:
           - razorTemplate
             
             
-            
+ # SSRF           
   - Type: System.Net.WebRequest
     TaintTypes:
       - SCS0035
@@ -1550,6 +1550,14 @@ Sinks:
       - Name: Create
         Arguments:
           - requestUriString
+
+  - Type: System.Net.Http.HttpRequestMessage
+    TaintTypes:
+      - SCS0035
+    Methods:
+      - Name: .ctor
+        Arguments:
+          - requestUri
             
   - Type: System.Net.Http.HttpClient
     TaintTypes:
@@ -1558,7 +1566,18 @@ Sinks:
       - Name: GetAsync
         Arguments:
           - requestUri
-  
+  #XSS
+    
+  - Type: System.IO.Stream
+    TaintTypes:
+      - SCS0029
+    Methods:
+      - Name: WriteAsync
+        Arguments:
+          - buffer 
+          - cancellationToken
+            
+            
   - Type: System.Web.Mvc.HtmlHelper
     TaintTypes:
       - SCS0029

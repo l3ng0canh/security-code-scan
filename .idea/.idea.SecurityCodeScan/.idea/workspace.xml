@@ -7,7 +7,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3473d60e-12e3-4593-9346-11546d0dfecb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/global.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,9 +54,9 @@
       </method>
     </configuration>
     <configuration name="security-scan" type="DotNetProject" factoryName=".NET Project">
-      <option name="EXE_PATH" value="$PROJECT_DIR$/SecurityCodeScan.Tool/.NET 4.x/bin/Release/net48/security-scan.exe" />
-      <option name="PROGRAM_PARAMETERS" value="F:\Learn\DoAnTotNghiep\VulApp\WebApplicationVulnerable\WebApplicationVulnerable.sln" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SecurityCodeScan.Tool/.NET 4.x/bin/Release/net48" />
+      <option name="EXE_PATH" value="$PROJECT_DIR$/SecurityCodeScan.Tool/.NET 4.x/bin/Debug/net48/security-scan.exe" />
+      <option name="PROGRAM_PARAMETERS" value="F:\Learn\DoAnTotNghiep\WebApplicationVulDotNetCore\WebApplicationVul.sln" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/SecurityCodeScan.Tool/.NET Core/bin/Debug/net6.0" />
       <option name="PASS_PARENT_ENVS" value="1" />
       <option name="USE_EXTERNAL_CONSOLE" value="0" />
       <option name="USE_MONO" value="0" />
@@ -62,7 +64,7 @@
       <option name="PROJECT_PATH" value="$PROJECT_DIR$/SecurityCodeScan.Tool/.NET 4.x/security-scan.csproj" />
       <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
       <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
-      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="0" />
       <option name="PROJECT_KIND" value="DotNetCore" />
       <option name="PROJECT_TFM" value=".NETFramework,Version=v4.8" />
       <method v="2">
@@ -96,6 +98,9 @@
       <workItem from="1656521620554" duration="1288000" />
       <workItem from="1657100778692" duration="163000" />
       <workItem from="1657361087038" duration="2000" />
+      <workItem from="1658612790370" duration="709000" />
+      <workItem from="1658662843645" duration="336000" />
+      <workItem from="1658696500244" duration="957000" />
     </task>
     <servers />
   </component>

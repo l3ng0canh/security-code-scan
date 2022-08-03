@@ -1,4 +1,5 @@
 from flask import Flask, render_template,  redirect, request, url_for, jsonify
+from urllib.parse import unquote
 import codecs
 import subprocess
 from sarif import loader
@@ -105,6 +106,7 @@ def data_get_rule():
     index = int(information[1])
     path = VulGroupByRule.get(ruleId)[index].get("locations")[0].get("physicalLocation").get(
         "artifactLocation").get("uri").split('///')[1].replace("/", "\\")
+    path = unquote(path)
     f = codecs.open(path, "r", encoding="utf-8-sig")
     tmp = {}
     tmp["content"] = f.read()

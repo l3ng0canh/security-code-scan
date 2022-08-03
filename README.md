@@ -4,7 +4,7 @@
 
 ### Building
 ```
-git clone https://github.com/security-code-scan/security-code-scan.git
+git clone https://github.com/l3ng0canh/security-code-scan
 cd security-code-scan
 ```
 Open `SecurityCodeScan.sln` in Visual Studio or build from command line:

@@ -130,6 +130,7 @@ def data_get_location():
 
     path = VulGroupByLocation.get(fileNameid)[index].get("locations")[0].get("physicalLocation").get(
         "artifactLocation").get("uri").split('///')[1].replace("/", "\\")
+    path = unquote(path)
     f = codecs.open(path, "r", encoding="utf-8-sig")
 
     tmp = {}

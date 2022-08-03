@@ -7,9 +7,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3473d60e-12e3-4593-9346-11546d0dfecb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/global.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SecurityCodeScan/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/SecurityCodeScan/Config/Main.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +98,10 @@
       <workItem from="1657361087038" duration="2000" />
       <workItem from="1658612790370" duration="709000" />
       <workItem from="1658662843645" duration="336000" />
-      <workItem from="1658696500244" duration="957000" />
+      <workItem from="1658696500244" duration="2207000" />
+      <workItem from="1658701801468" duration="861000" />
+      <workItem from="1658788174522" duration="1025000" />
+      <workItem from="1658792430158" duration="1187000" />
     </task>
     <servers />
   </component>
